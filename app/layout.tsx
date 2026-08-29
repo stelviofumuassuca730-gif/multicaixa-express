@@ -1,6 +1,7 @@
-﻿import { Analytics } from '@vercel/analytics/next'
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { RegisterSW } from '@/components/register-sw'
 
 export const metadata: Metadata = {
   title: 'Multicaixa Express',
@@ -47,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className="antialiased">
+        <RegisterSW />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
