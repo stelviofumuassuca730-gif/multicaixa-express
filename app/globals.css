@@ -171,7 +171,7 @@
 .iban-form .primary { width: 86%; margin: 140px auto 0; border-radius: 28px; }
 
 /* Botoes Cancelar/Confirmar - formato pilula */
-.confirm-actions button { border-radius: 35px; }
+
 
 /* Ecra de Resultado - tipografia */
 .transfer-result h1 { font-family: 'Montserrat', Arial, sans-serif; font-weight: 800; font-size: 30px; }
