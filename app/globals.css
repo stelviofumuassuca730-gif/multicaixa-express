@@ -221,3 +221,90 @@
   height: 35px;
 }
 
+
+@media (max-width: 480px) {
+
+  .iban-confirmation {
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 220px;
+  }
+
+  .iban-confirmation h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 55px;
+  }
+
+  .iban-confirmation .amount,
+  .iban-confirmation .value {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 25px;
+  }
+
+  .iban-confirmation .label,
+  .iban-confirmation .montante-label,
+  .iban-confirmation .iban-label,
+  .iban-confirmation .titular-label {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .iban-confirmation .amount + .label {
+    margin-bottom: 25px;
+  }
+
+  .iban-confirmation .iban {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 25px;
+  }
+
+  .iban-confirmation .holder,
+  .iban-confirmation .titular {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 25px;
+  }
+
+  .iban-confirmation .total {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  .iban-confirmation .summary,
+  .iban-confirmation .cost-summary {
+    font-size: 30px;
+    font-weight: 400;
+  }
+
+  .confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    align-items: center;
+    padding: 0 8px 34px;
+  }
+
+  .confirm-actions button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    padding: 0;
+    border-radius: 6px;
+    line-height: 1;
+    white-space: nowrap;
+    font-family: 'Roboto', sans-serif;
+    font-size: 27px;
+    font-weight: 400;
+  }
+
+}
+
