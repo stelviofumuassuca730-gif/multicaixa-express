@@ -164,3 +164,6 @@
 
 .iban-form h1 { font-weight: 700; font-family: 'Roboto', Arial, sans-serif; }
 .iban-form > label:first-of-type { font-weight: 400; font-family: 'Roboto', Arial, sans-serif; }
+
+.iban-form input { border: 0 !important; box-shadow: none !important; font-family: 'Roboto', Arial, sans-serif; font-weight: 400; }
+.iban-form .primary { color: #6b0f0f; }
