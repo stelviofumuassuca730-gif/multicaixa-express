@@ -162,5 +162,5 @@
 .amount-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 16px; pointer-events: none; }
 
 
-.iban-form h1 { font-weight: 400; font-family: 'Roboto', Arial, sans-serif; }
+.iban-form h1 { font-weight: 700; font-family: 'Roboto', Arial, sans-serif; }
 .iban-form > label:first-of-type { font-weight: 400; font-family: 'Roboto', Arial, sans-serif; }
