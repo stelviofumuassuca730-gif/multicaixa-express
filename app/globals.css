@@ -154,3 +154,5 @@
 .transfer-icon-image.op-inactive-icon {
   filter: grayscale(1) opacity(0.4);
 }
+
+.confirm-actions .primary { color: #6b0f0f; }
