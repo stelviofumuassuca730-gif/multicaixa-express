@@ -550,3 +550,34 @@
   }
 }
 
+
+@media (max-width: 480px) {
+
+  .transfer-result .result-meta {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    justify-content: flex-start !important;
+    text-align: right !important;
+    gap: 8px !important;
+    margin: 0 8px 30px auto !important;
+  }
+
+  .transfer-result .result-meta span {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+  }
+
+  .transfer-result .result-actions button,
+  .transfer-result button {
+    font-family: 'Roboto', sans-serif !important;
+  }
+
+}
+
