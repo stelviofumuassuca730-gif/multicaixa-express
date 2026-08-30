@@ -211,3 +211,8 @@
   border-radius: 6px;
 }
 
+
+.confirm-actions button {
+  height: 30px;
+}
+
