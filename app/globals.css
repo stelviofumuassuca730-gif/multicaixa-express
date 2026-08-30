@@ -528,3 +528,25 @@
 .result-actions button svg { border: 3px solid var(--orange); border-radius: 50%; padding: 16px; box-sizing: border-box; width: 62px; height: 62px; }
 
 .transfer-result > .primary { color: #6b0f0f; }
+
+@media (max-width: 480px) {
+  .transfer-result .result-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    text-align: right;
+    gap: 8px;
+    margin: 0 8px 30px auto;
+  }
+
+  .transfer-result .result-meta span {
+    margin: 0 !important;
+    padding: 0;
+    line-height: 1.1;
+    white-space: nowrap;
+    font-size: 20px;
+    font-weight: 400;
+  }
+}
+
