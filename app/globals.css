@@ -308,3 +308,21 @@
 
 }
 
+
+/* Ecra de Sucesso - tipografia e espacamento precisos (spec Micailu) */
+.result-meta { margin-bottom: 30px; }
+.transfer-result h1 { font-size: 32px; font-weight: 700; line-height: 1.16; }
+.result-values { gap: 0; margin-top: 30px; }
+.result-values strong:nth-child(1) { font-size: 36px; font-weight: 700; margin-bottom: 7px; }
+.result-values small:nth-child(2) { font-size: 30px; font-weight: 400; margin-bottom: 35px; }
+.result-values strong:nth-child(3) { font-size: 32px; font-weight: 300; margin-bottom: 7px; }
+.result-values small:nth-child(4) { font-size: 30px; font-weight: 400; margin-bottom: 25px; }
+.result-values strong:nth-child(5) { font-size: 32px; font-weight: 300; margin-bottom: 6px; }
+.result-values small:nth-child(6) { font-size: 30px; font-weight: 400; margin-bottom: 30px; }
+.result-cost { padding-top: 12px; padding-bottom: 8px; line-height: 1.3; }
+.result-cost b { font-size: 30px; font-weight: 700; }
+.current-balance { margin-top: 47px; margin-bottom: 41px; }
+.current-balance span { font-size: 30px; font-weight: 700; }
+.current-balance strong { font-size: 30px; font-weight: 700; }
+.result-actions button { gap: 11px; font-size: 27px; font-weight: 400; }
+.transfer-result > .primary { margin-top: 25px; font-size: 32px; font-weight: 400; }
