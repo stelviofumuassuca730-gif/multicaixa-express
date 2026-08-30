@@ -156,3 +156,7 @@
 }
 
 .confirm-actions .primary { color: #6b0f0f; }
+
+.amount-wrap { position: relative; }
+.amount-wrap input { padding-right: 44px; }
+.amount-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 16px; pointer-events: none; }
