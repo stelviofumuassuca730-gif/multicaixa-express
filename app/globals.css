@@ -593,3 +593,10 @@
 .result-values strong:nth-child(5) { margin-bottom: 12px; }
 .result-values small:nth-child(6) { margin-bottom: 60px; }
 .result-cost { padding-top: 22px; padding-bottom: 18px; line-height: 1.5; }
+
+/* Ecra de Sucesso - texto na cor vermelha do logo */
+.transfer-result h1 { color: #C20000; }
+.result-values small { color: #C20000; }
+.current-balance span { color: #C20000; }
+.result-actions button { color: #C20000; }
+.result-actions button svg { border-color: #C20000; }
