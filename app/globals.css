@@ -596,3 +596,7 @@
 
 
 .transfer-result > .app-header { height: 232px; }
+
+.result-header { height: 232px; }
+.result-header .brand-logo { width: 260px; height: auto; max-height: 90px; object-fit: contain; }
+.transfer-result .result-meta { margin-top: 28px; }
