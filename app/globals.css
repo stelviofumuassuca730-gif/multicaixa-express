@@ -594,3 +594,5 @@
 .result-values small:nth-child(6) { margin-bottom: 60px; }
 .result-cost { padding-top: 22px; padding-bottom: 18px; line-height: 1.5; }
 
+
+.transfer-result > .app-header { height: 232px; }
