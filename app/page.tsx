@@ -12,7 +12,7 @@ type Op = { type:string; recipient:string; account:string; amount:string; descri
 const money = (value:string) => {const raw=value.replace(/[^0-9,.-]/g,'').trim();if(!raw)return 0;const normalized=raw.includes(',')?raw.replace(/\./g,'').replace(',','.'):raw.replace(/\.(?=\d{3}(?:\.|$))/g,'');return Number(normalized)||0}
 const format = (n:number) => n.toLocaleString('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2})+' Kz'
 const MOCK_BALANCE='2.500.000,00 Kz'
-const formatReceiptDate=(value:string)=>{const date=new Date(value);if(Number.isNaN(date.getTime()))return value;const pad=(n:number)=>String(n).padStart(2,'0');return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`}
+const formatReceiptDate=(value:string)=>{const date=new Date(value);if(Number.isNaN(date.getTime()))return value;const pad=(n:number)=>String(n).padStart(2,'0');return `${pad(date.getDate())}-${pad(date.getMonth()+1)}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`}
 const formatCardLast4=(value?:string)=>`**** ${String(value||'8418').replace(/\D/g,'').slice(-4).padStart(4,'0')}`
 const normalizeIban=(value:string)=>value.toUpperCase().replace(/[\s.]/g,'')
 const formatIban=(value:string)=>{const normalized=normalizeIban(value);return normalized.replace(/(.{4})(?=.)/g,'$1.')}
