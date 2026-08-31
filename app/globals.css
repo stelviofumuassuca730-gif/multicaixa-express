@@ -603,10 +603,12 @@
 .result-header {
   width: 100%;
   height: auto;
+  min-height: 0;
   padding: 0;
   margin: 0;
   overflow: hidden;
   line-height: 0;
+  display: block;
 }
 
 .result-header-banner {
@@ -614,7 +616,10 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  object-fit: contain;
   margin: 0;
+  padding: 0;
+  object-fit: contain;
+  object-position: center center;
 }
+
 
