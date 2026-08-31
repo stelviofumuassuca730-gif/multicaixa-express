@@ -5,8 +5,8 @@
 :root{--background:#fff;--foreground:#171717;--orange:#EA8C00;--gray:#858585;--line:#d6d6d6}.app-header{background:var(--orange);height:96px;min-height:96px;padding:0 18px;display:flex;align-items:center;position:relative}.app-header .brand-logo{width:250px;height:auto;max-height:62px;object-fit:contain;margin:0 auto}.app-header .header-button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0}.app-header .header-spacer{width:44px;flex:0 0 44px}@media(max-width:430px){.app-header{height:96px;min-height:96px;padding:0 14px}.app-header .brand-logo{width:210px}.operations{gap:14px 10px;padding-left:12px;padding-right:12px}.operations button{padding-left:3px;padding-right:3px}.operations button span{font-size:11px;line-height:1.12}}*{box-sizing:border-box}html,body{min-height:100%;background:#fff}body{margin:0;color:var(--foreground);font-family:Arial,Helvetica,sans-serif}.receipt-page{width:100%;max-width:590px;min-height:100dvh;background:#fff;color:#111;padding:48px 24px 18px;position:relative;font-family:Arial,Helvetica,sans-serif}.receipt-head{display:flex;align-items:flex-start;justify-content:space-between;font-size:6px;line-height:1.15;color:#111}.receipt-head img{width:72px;height:30px;object-fit:contain;margin-top:-8px}.receipt-head>span:first-child{white-space:nowrap}.receipt-page>h1{text-align:center;color:#e00000;font-size:12px;font-weight:400;margin:10px 0 12px}.receipt-page>hr{border:0;border-top:2px solid #e5e5e5;margin:0}.receipt-intro{text-align:center;font-size:8px;margin:15px 0 40px}.receipt-table{width:100%;max-width:296px;margin:0 auto;border-left:2px solid #e00000;padding-left:8px}.receipt-table p{display:grid;grid-template-columns:82px minmax(0,1fr);gap:8px;margin:0 0 7px;font-size:8px;line-height:1.1}.receipt-table p b{text-align:right;font-weight:700}.receipt-table p span{white-space:nowrap}.receipt-table p:nth-child(4) span{font-size:8px;letter-spacing:0}.institution{text-align:center;font-size:8px;margin-top:88px;line-height:1.25}.receipt-page footer{background:#d9d9c7;text-align:center;font-size:6px;line-height:1.35;padding:8px 7px;margin-top:7px;min-height:42px}.receipt-back{position:absolute;left:8px;top:8px} .receipt-head b{display:none}.receipt-head b{display:none}.receipt-table p{grid-template-columns:125px minmax(0,1fr)}.receipt-table p:nth-child(4) span{white-space:nowrap;font-size:12px;letter-spacing:-.15px}button{font:inherit;cursor:pointer}.home-content{width:100%;max-width:590px;margin:0 auto}.operations{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px;padding:0 16px}.operations button{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;padding:0 4px}.operations .grid-icon-image{width:clamp(52px,18vw,72px);height:clamp(52px,18vw,72px);object-fit:contain;flex:none}.operations button span{display:block;width:100%;max-width:100%;text-align:center;line-height:1.15;overflow-wrap:normal;word-break:normal;white-space:normal;font-size:clamp(11px,3.2vw,14px);font-weight:400;transform:none}.phone-shell{min-height:100vh;max-width:590px;margin:0 auto;background:#fff;overflow:hidden}.brand-logo{display:block;width:300px;height:70px;object-fit:cover;object-position:center}.splash-screen{min-height:100dvh;background:var(--orange);display:grid;place-items:center}.splash-screen .brand-logo{width:350px;height:80px;object-fit:cover}.pin-top{height:194px;background:var(--orange);display:flex;align-items:center;justify-content:center}.pin-top .brand-logo{width:430px}.app-header{height:126px;background:var(--orange);display:flex;align-items:center;justify-content:space-between;padding:0 28px}.header-button{border:0;color:#111;background:transparent;padding:5px}.header-spacer{width:40px}.home-content,.payment,.form-screen,.review,.history{text-align:center;padding:20px 20px 24px;overflow-y:auto}.home-content h1,.payment h1,.form-screen h1,.review h1,.history h1{color:#e79214;font-size:28px;margin:0 0 22px}.card-switch{border:0;background:transparent;padding:0;width:100%;touch-action:pan-y}.cards-viewport{width:calc(100% + 40px);margin-left:-20px;overflow:hidden}.cards-track{display:flex;gap:14px;padding:0 20px;transform:translateX(0);transition:transform .3s ease}.cards-track.show-bpc{transform:translateX(calc(-88% - 14px))}.carousel-card{flex:0 0 88%;min-width:0}.real-bank-card{display:block;width:100%;aspect-ratio:1.72;object-fit:cover;object-position:center 43%;border-radius:24px}.carousel-card.bpc .real-bank-card{object-position:center;border-radius:24px}.cards-track.show-bpc{transform:none}.app-header,.pin-top{background:var(--orange)}.consultas-screen,.balances-screen{padding:20px 24px;text-align:center}.consultas-screen h1,.balances-screen h1{color:var(--orange);font-size:28px;margin:0 0 22px}.consultas-options{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.consultas-options button{min-height:130px;border:1px solid var(--orange);border-radius:12px;background:#fff;color:var(--orange);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.consultas-options button svg{stroke-width:1.8}.consultas-options strong{font-size:15px;color:var(--gray)}.consultas-icon{font-size:64px;font-family:Arial;line-height:.7;font-weight:300}.balances-screen>section{padding:20px 24px}.balance-box{border:2px solid #858585;border-radius:4px;margin-top:24px;color:var(--orange);font-size:24px}.balance-box>strong{display:block;padding:22px 8px;border-bottom:1px solid #858585;font-weight:400}.balance-box>div{display:grid;grid-template-columns:1fr 1fr;color:#d8a33e;font-size:18px}.balance-box>div span{padding:14px 4px 8px}.balance-box>div span+span{border-left:1px solid #858585}.balance-box small{display:block;color:#555;font-size:15px;margin-top:8px}.result-meta{justify-content:space-between}.result-meta span:last-child{text-align:right}.carousel-card .card-caption{display:none}.cards-track.show-atlantico{transform:translateX(calc(-88vw + 6px))}.cards-track.show-bpc{transform:none}.card-switch{border:0;background:transparent;padding:0;width:100%;touch-action:pan-y}.home-content .operations{margin:8px -8px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px 18px}.home-content .operations button{min-height:138px;border:1.5px solid #bfc1c3;border-radius:19px;background:#fff;color:#b8b8b8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:8px 4px}.home-content .operations button>svg,.home-content .operations button>.icon-wrapper>svg{width:72px;height:72px;fill:none;stroke:var(--orange);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.grid-icon-image{width:72px;height:72px;object-fit:contain;display:block}.icon-wrapper{position:relative;width:72px;height:72px;display:grid;place-items:center}.icon-wrapper svg{display:block}.currency-badge{position:absolute;right:-2px;top:5px;display:grid;place-items:center;width:24px;height:24px;border:3px solid var(--orange);border-radius:50%;background:#fff;color:var(--orange);font:700 10px/1 Arial,sans-serif}.express-icon .currency-badge{right:-1px;top:12px}.withdrawal-icon .currency-badge{right:1px;top:2px}.home-content .operations button>svg rect[fill="white"],.home-content .operations button>svg circle[fill="white"],.icon-wrapper svg rect[fill="white"]{fill:#fff}.home-content .operations button span{font-size:14px;line-height:1.05}.home-content .operations button:nth-child(7){grid-column:1}.bank-card{width:100%;max-width:520px;aspect-ratio:1.72;height:auto;min-height:0;margin:auto;border-radius:24px;padding:28px 34px;color:#fff;text-align:left;background:#f79400;position:relative;overflow:hidden}.bank-card.bpc{background:#ad8800}.bank-card strong{letter-spacing:-1px}.bank-card:after{content:'MULTICAIXA';position:absolute;right:30px;top:82px;font-size:18px;font-weight:700}.bank-card.bpc:after{content:'BPC'}.bank-card strong{display:block;font-size:38px}.bank-card small{display:block;margin:10px 0;font-size:13px}.card-chip{font-size:34px;margin:18px 0}.card-number{font-size:22px;margin:15px 0}.bank-card span{float:right;font-size:17px}.card-caption{color:#c9cdd0;font-size:28px;margin:12px 0 16px}.home-content>.card-caption{margin-top:10px}.carousel-dots{display:flex;justify-content:center;gap:10px;margin:12px}.carousel-dots i{display:block;width:12px;height:12px;border-radius:50%;background:#c9cdd0}.carousel-dots i.active{background:#888}.balance{display:flex;justify-content:center;gap:18px;color:#777;margin:10px}.balance b{color:#e79214}.operations{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 28px;margin-top:22px}.operations button{height:162px;border:1px solid #bbb;border-radius:18px;background:#fff;color:#e99200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}.operations span{color:#aaa;font-size:14px}.bottom-nav{position:sticky;bottom:0;display:flex;justify-content:space-around;padding:12px 4px;background:#fff;border-top:1px solid var(--line)}.bottom-nav button{border:0;background:transparent;color:#aaa;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px}.bottom-nav .active{color:var(--orange)}.pin-content{text-align:center;padding-top:65px}.pin-dots{display:flex;justify-content:center;gap:22px;margin-bottom:28px}.pin-dots span{width:22px;height:22px;border-radius:50%;background:#aaa}.pin-dots .filled{background:var(--orange)}.pin-content h1{color:#858585;font-size:17px;font-weight:400;margin:0 0 38px}.keypad{width:282px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:9px 28px}.keypad button{height:72px;border:1px solid #999;border-radius:7px;background:#fff;color:#777;font-size:30px}.keypad .delete-key{font-size:14px}.support{margin:180px 26px 0;padding:25px 0 35px;border-top:1px solid #c9c9c9;text-align:center}.support h2{color:#e5a141;font-size:26px;margin:0 0 16px}.support p{color:#e3a03b;font-size:16px;display:flex;justify-content:center;gap:8px}.support h3{display:flex;justify-content:center;gap:8px}.payment{padding-top:50px}.payment>button{width:100%;margin:10px 0;padding:20px;border:1px solid #ccc;border-radius:8px;background:#fff;display:flex;align-items:center;gap:20px;color:var(--orange)}.payment>button span{flex:1;text-align:left}.form-screen,.review{padding-top:40px}.form-screen label{display:block;text-align:left;margin:18px 0;color:#777}.form-screen input{display:block;width:100%;margin-top:7px;padding:14px;border:1px solid #aaa;border-radius:6px;font-size:16px}.primary,.secondary{border:0;border-radius:8px;padding:14px 26px;margin:10px 4px;font-size:18px}.primary{background:var(--orange);color:#fff}.secondary{background:#ddd;color:#666}.error{color:#bd1c1c;font-size:14px}.review-box{border:1px solid #ddd;padding:12px;text-align:left}.review-box p{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:10px}.result{text-align:center;padding:100px 30px}.success-mark,.failure-mark{width:80px;height:80px;border-radius:50%;margin:auto;display:grid;place-items:center;color:#fff}.success-mark{background:#53a848}.failure-mark{background:#bd3939}.loader{width:56px;height:56px;border:5px solid #eee;border-top-color:var(--orange);border-radius:50%;margin:30px auto;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.history button{width:100%;border:0;border-bottom:1px solid #ccc;background:#fff;padding:18px;text-align:left;display:grid;gap:5px}.history small{color:#777}.receipt-page{max-width:700px;min-height:100vh;padding:80px 38px 40px;margin:auto;font-size:13px}.receipt-back{border:0;background:transparent;position:absolute}.receipt-head{display:flex;justify-content:space-between;font-size:8px}.receipt-head b{font-size:24px;color:#17479b}.receipt-page h1{text-align:center;color:#d00;font-size:16px;font-weight:400}.receipt-intro{text-align:center;margin:24px 0 70px}.receipt-table{border-left:2px solid red;padding-left:12px;max-width:500px;margin:auto}.receipt-table p{display:grid;grid-template-columns:110px 1fr;margin:10px 0}.receipt-table b{text-align:right;margin-right:16px}.institution{text-align:center;margin-top:130px}.receipt-page footer{text-align:center;background:#d9d9c8;padding:12px;margin-top:10px;font-size:9px}.drawer-backdrop{position:fixed;inset:0;border:0;background:#0008}.drawer{position:fixed;inset:0 auto 0 0;width:min(360px,78vw);background:#fff;padding:24px 18px}.drawer-time{margin-bottom:28px}.drawer button{width:100%;border:0;background:#fff;display:flex;align-items:center;gap:18px;padding:20px 6px;color:var(--orange);text-align:left}.drawer-close{position:fixed;left:min(360px,78vw);top:16px;border:0;background:#fff}@media(max-width:430px){.app-header{height:126px}.bank-card{height:305px}.operations{gap:14px 18px}.operations button{height:150px}.brand-logo{width:290px}.receipt-page{padding-left:20px;padding-right:20px}}
 
 
-/* FINAL MOBILE POLISH — preserve approved assets and improve proportions */
-/* 1. HEADER / LOGO EXPRESS — compact uniform orange header, red flower + white "express" */
+/* FINAL MOBILE POLISH Ã¢â‚¬â€ preserve approved assets and improve proportions */
+/* 1. HEADER / LOGO EXPRESS Ã¢â‚¬â€ compact uniform orange header, red flower + white "express" */
 .app-header {
   height: 78px !important;
   min-height: 78px !important;
@@ -33,7 +33,7 @@
   flex: 0 0 42px;
 }
 
-/* 3-5. GRELHA DOS 9 ÍCONES — keep original PNGs; only fix text layout so nothing overflows at 375px */
+/* 3-5. GRELHA DOS 9 ÃƒÂCONES Ã¢â‚¬â€ keep original PNGs; only fix text layout so nothing overflows at 375px */
 .home-content .operations button {
   min-width: 0;
   overflow: hidden;
@@ -64,7 +64,7 @@
   letter-spacing: 0;
 }
 
-/* 2. CARTÃO BPC — same structure/proportion/rounded corners/responsive as Atlântico */
+/* 2. CARTÃƒÆ’O BPC Ã¢â‚¬â€ same structure/proportion/rounded corners/responsive as AtlÃƒÂ¢ntico */
 .carousel-card .real-bank-card,
 .carousel-card.bpc .real-bank-card {
   width: 100%;
@@ -74,11 +74,11 @@
   border-radius: 22px;
 }
 
-/* 2b. NOTCH/CUTOUT — reproduz o mesmo recorte lateral curvo do Atlântico no BPC.
+/* 2b. NOTCH/CUTOUT Ã¢â‚¬â€ reproduz o mesmo recorte lateral curvo do AtlÃƒÂ¢ntico no BPC.
    Ellipse cujas percentagens (11.2% larg / 17.3% alt) equivalem a ~80px em ambos
    os eixos no formato 715x463, mantendo o recorte perfeitamente circular e
    proporcional em qualquer largura (inclusive 375px). Centro fora da borda direita
-   (108.1%) a 70% da altura, igual ao Atlântico. */
+   (108.1%) a 70% da altura, igual ao AtlÃƒÂ¢ntico. */
 .carousel-card.bpc .real-bank-card {
   -webkit-mask-image: radial-gradient(ellipse 11.2% 17.3% at 108.1% 70%, transparent 99%, #000 100%);
   mask-image: radial-gradient(ellipse 11.2% 17.3% at 108.1% 70%, transparent 99%, #000 100%);
@@ -132,8 +132,8 @@
   }
 }
 
-/* 3. EXPRESS INATIVO — quando o cartão BPC está selecionado, a operação
-   "Transferências Express" aparece cinza / desativada. Não altera o PNG do ícone. */
+/* 3. EXPRESS INATIVO Ã¢â‚¬â€ quando o cartÃƒÂ£o BPC estÃƒÂ¡ selecionado, a operaÃƒÂ§ÃƒÂ£o
+   "TransferÃƒÂªncias Express" aparece cinza / desativada. NÃƒÂ£o altera o PNG do ÃƒÂ­cone. */
 .operations button.op-inactive {
   pointer-events: none;
 }
@@ -144,7 +144,7 @@
   color: var(--gray);
 }
 
-/* EXPRESS INATIVO no ecra de Transferencias — quando Cartao 2 (BPC) selecionado */
+/* EXPRESS INATIVO no ecra de Transferencias Ã¢â‚¬â€ quando Cartao 2 (BPC) selecionado */
 .transfer-options button.op-inactive {
   pointer-events: none;
 }
@@ -606,7 +606,7 @@
   min-height: 0;
   padding: 0;
   margin: 0;
-  overflow: hidden; background: var(--orange);
+  overflow: hidden;
   line-height: 0;
   display: block;
 }
@@ -621,6 +621,24 @@
   object-fit: contain;
   object-position: center center;
 }
+.result-header {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  line-height: 0;
+  display: block;
+}
 
-
-
+.result-header-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
+  object-position: center center;
+}
