@@ -982,4 +982,4 @@
 }
 
 /* Escala proporcional para Android - mantem toda a app fiel ao design original */
-html, body { overflow-x: hidden; } .app-frame { width: 590px; margin: 0 auto; zoom: min(1, calc(100vw / 590px)); }
+html, body { overflow-x: hidden; } .app-frame { width: 590px; margin: 0 auto; }
