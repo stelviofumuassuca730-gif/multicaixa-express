@@ -1,7 +1,8 @@
-import { Analytics } from '@vercel/analytics/next'
+﻿import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { RegisterSW } from '@/components/register-sw'
+import { ResponsiveScale } from '@/components/responsive-scale'
 
 export const metadata: Metadata = {
   title: 'Multicaixa Express',
@@ -48,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className="antialiased">
-        <RegisterSW />
+        <RegisterSW /><ResponsiveScale />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
