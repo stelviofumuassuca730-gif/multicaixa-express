@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className="antialiased">
-        <RegisterSW /><ResponsiveScale />
+        <RegisterSW />
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
