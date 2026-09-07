@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { jsPDF } from 'jspdf'
@@ -56,9 +56,9 @@ async function buildReceiptPdf(op:Op){
     ['Transacção',op.reference]
   ];
   let y=64;
-  pdf.setDrawColor(210,0,0);
-  pdf.setLineWidth(1.3);
-  pdf.line(72,57,72,134);
+  pdf.setDrawColor(235,80,80);
+  pdf.setLineWidth(1.0);
+  pdf.line(72,60,72,134);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
