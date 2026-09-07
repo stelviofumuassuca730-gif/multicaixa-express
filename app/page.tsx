@@ -57,7 +57,7 @@ async function buildReceiptPdf(op:Op){
   ];
   let y=64;
   pdf.setDrawColor(210,0,0);
-  pdf.setLineWidth(0.3);
+  pdf.setLineWidth(1.3);
   pdf.line(72,57,72,134);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
@@ -74,41 +74,39 @@ async function buildReceiptPdf(op:Op){
   pdf.text(
     'Cuidar do presente, assegurar o futuro.',
     105,
-    160,
+    140,
     {align:'center'}
   );
-  pdf.setFont('helvetica','bold');
   pdf.text(
     'BPC - MCX EMV',
     105,
-    168,
+    148,
     {align:'center'}
   );
-  pdf.setFont('helvetica','normal');
   pdf.setFillColor(218,218,199);
-  pdf.rect(12,176,186,26,'F');
+  pdf.rect(12,156,186,26,'F');
   pdf.setFontSize(8);
   pdf.setTextColor(60,60,60);
   pdf.text(
     'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
     105,
-    184,
+    164,
     {align:'center'}
   );
   pdf.text(
     '(+244) 222 641 840 | 923 168 840',
     105,
-    190,
+    170,
     {align:'center'}
   );
   pdf.setDrawColor(190,190,175);
   pdf.setLineWidth(0.2);
-  pdf.line(20,194,190,194);
+  pdf.line(20,174,190,174);
   pdf.setFontSize(8);
   pdf.text(
     'IBAN: 0010007100150020007311 | 500290******0477',
     105,
-    199,
+    179,
     {align:'center'}
   );
   return pdf.output('blob');
