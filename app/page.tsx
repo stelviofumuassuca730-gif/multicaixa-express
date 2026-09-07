@@ -26,22 +26,22 @@ async function buildReceiptPdf(op:Op){
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(6);
   pdf.setTextColor(0,0,0);
-  pdf.text('Digitally signed by',12,15);
-  pdf.text('noreply@mcxexpress.co.ao',12,19);
-  pdf.text(`Date: ${_dateStr}`,12,23);
+  pdf.text('Digitally signed by',12,14);
+  pdf.text('noreply@mcxexpress.co.ao',12,18);
+  pdf.text(`Date: ${_dateStr}`,12,22);
   pdf.setFontSize(16);
   pdf.setTextColor(200,0,0);
-  pdf.text('Comprovativo Digital',105,32,{align:'center'});
+  pdf.text('Comprovativo Digital',105,30,{align:'center'});
   pdf.setDrawColor(225,225,225);
   pdf.setLineWidth(0.35);
-  pdf.line(12,39,198,39);
+  pdf.line(12,38,198,38);
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(8);
   pdf.setTextColor(0,0,0);
   pdf.text(
     'Detalhe da operação realizada através do canal MULTICAIXA Express.',
     105,
-    46,
+    45,
     {align:'center'}
   );
   const rows=[
@@ -55,10 +55,10 @@ async function buildReceiptPdf(op:Op){
     ['Total',op.amount],
     ['Transacção',op.reference]
   ];
-  let y=68;
+  let y=65;
   pdf.setDrawColor(210,0,0);
-  pdf.setLineWidth(0.45);
-  pdf.line(72,63,72,151);
+  pdf.setLineWidth(0.3);
+  pdf.line(72,58,72,146);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(8);
@@ -76,36 +76,38 @@ async function buildReceiptPdf(op:Op){
     172,
     {align:'center'}
   );
+  pdf.setFont('helvetica','bold');
   pdf.text(
     'BPC - MCX EMV',
     105,
     179,
     {align:'center'}
   );
+  pdf.setFont('helvetica','normal');
   pdf.setFillColor(218,218,199);
-  pdf.rect(12,185,186,20,'F');
+  pdf.rect(12,186,186,20,'F');
   pdf.setFontSize(6);
+  pdf.setTextColor(60,60,60);
   pdf.text(
     'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
     105,
-    192,
+    193,
     {align:'center'}
   );
   pdf.text(
     '(+244) 222 641 840 | 923 168 840',
     105,
-    198,
+    199,
     {align:'center'}
   );
-  pdf.setDrawColor(200,200,200);
-  pdf.setLineWidth(0.25);
-  pdf.line(12,209,198,209);
+  pdf.setDrawColor(190,190,175);
+  pdf.setLineWidth(0.2);
+  pdf.line(20,203,190,203);
   pdf.setFontSize(6);
-  pdf.setTextColor(120,120,120);
   pdf.text(
     'IBAN: 0010007100150020007311 | 500290******0477',
     105,
-    214,
+    207,
     {align:'center'}
   );
   return pdf.output('blob');
