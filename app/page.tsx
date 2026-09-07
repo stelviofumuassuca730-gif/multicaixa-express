@@ -10,6 +10,7 @@ async function buildReceiptPdf(op:Op){
     unit:'mm',
     format:'a4'
   });
+
   try{
     const response=await fetch('/assets/bpc-logo-reference.png');
     const blob=await response.blob();
@@ -20,21 +21,33 @@ async function buildReceiptPdf(op:Op){
     });
     pdf.addImage(data,'PNG',166,10,24,12);
   }catch{}
+
   const _d=new Date(op.completedAt||op.date);
   const _p=(n:number)=>String(n).padStart(2,'0');
-  const _dateStr=Number.isNaN(_d.getTime())?String(op.completedAt||op.date):`${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())} WAT`;
+
+  const _dateStr=Number.isNaN(_d.getTime())
+    ? String(op.completedAt||op.date)
+    : `${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())}`;
+
+  // assinatura/identificação da simulação
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(6.09);
   pdf.setTextColor(0,0,0);
-  pdf.text('Digitally signed by',12,14);
-  pdf.text('noreply@mcxexpress.co.ao',12,18);
+  pdf.text('SIMULAÇÃO / DEMO',12,14);
+  pdf.text('Comprovativo de teste',12,18);
   pdf.text(`Date: ${_dateStr}`,12,22);
+
+  // título
   pdf.setFontSize(14);
   pdf.setTextColor(200,0,0);
   pdf.text('Comprovativo Digital',105,30,{align:'center'});
+
+  // linha superior
   pdf.setDrawColor(225,225,225);
   pdf.setLineWidth(0.35);
   pdf.line(12,38,198,38);
+
+  // descrição
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(11);
   pdf.setTextColor(0,0,0);
@@ -44,6 +57,7 @@ async function buildReceiptPdf(op:Op){
     46,
     {align:'center'}
   );
+
   const rows=[
     ['Data - Hora',formatReceiptDate(op.completedAt||op.date)],
     ['Operação',op.type],
@@ -55,62 +69,82 @@ async function buildReceiptPdf(op:Op){
     ['Total',op.amount],
     ['Transacção',op.reference]
   ];
+
   let y=64;
+
+  // divisor vertical mais suave
   pdf.setDrawColor(235,80,80);
   pdf.setLineWidth(1.0);
   pdf.line(72,61.5,72,135.5);
+
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
+    pdf.setTextColor(0,0,0);
     pdf.text(label,68,y,{align:'right'});
+
     pdf.setFont('helvetica','normal');
     pdf.setFontSize(11.77);
     pdf.text(String(value),78,y);
+
     y+=8.2;
   });
+
+  // bloco inferior
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(11);
   pdf.setTextColor(0,0,0);
+
   pdf.text(
-    'Cuidar do presente, assegurar o futuro.',
+    'Comprovativo de demonstração.',
     105,
     141.5,
     {align:'center'}
   );
+
   pdf.text(
-    'BPC - MCX EMV',
+    'SIMULAÇÃO - MULTICAIXA EXPRESS',
     105,
     149.5,
     {align:'center'}
   );
+
+  // caixa de suporte
   pdf.setFillColor(218,218,199);
   pdf.rect(12,156,186,26,'F');
+
   pdf.setFontSize(8);
   pdf.setTextColor(60,60,60);
+
   pdf.text(
-    'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
+    'Documento de demonstração. Não constitui comprovativo bancário.',
     105,
     164,
     {align:'center'}
   );
+
   pdf.text(
-    '(+244) 222 641 840 | 923 168 840',
+    'Dados de contacto e conta utilizados apenas para teste.',
     105,
     170,
     {align:'center'}
   );
+
   pdf.setDrawColor(190,190,175);
   pdf.setLineWidth(0.2);
   pdf.line(20,174,190,174);
+
   pdf.setFontSize(8);
   pdf.text(
-    'IBAN: 0010007100150020007311 | 500290******0477',
+    'REFERÊNCIA DE TESTE | DOCUMENTO DEMO',
     105,
     179,
     {align:'center'}
   );
+
   return pdf.output('blob');
 }
+
 async function shareReceipt(op:Op){const blob=await buildReceiptPdf(op);const file=new File([blob],`comprovativo-${op.reference}.pdf`,{type:'application/pdf'});if(typeof navigator!=='undefined'&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Comprovativo',text:`Comprovativo da operação ${op.reference}`});return}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);alert('PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.')}
 
 type Screen = 'splash'|'pin'|'home'|'pay'|'transfer'|'express'|'services'|'topup'|'balance'|'balance-result'|'recipient'|'review'|'pinConfirm'|'processing'|'result'|'receipt'|'history'|'activity-detail'|'cards'
