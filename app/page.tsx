@@ -20,12 +20,15 @@ async function buildReceiptPdf(op:Op){
     });
     pdf.addImage(data,'PNG',166,10,24,12);
   }catch{}
+  const _d=new Date(op.completedAt||op.date);
+  const _p=(n:number)=>String(n).padStart(2,'0');
+  const _dateStr=Number.isNaN(_d.getTime())?String(op.completedAt||op.date):`${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())} WAT`;
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(6);
   pdf.setTextColor(0,0,0);
-  pdf.text('Comprovativo digital',12,15);
-  pdf.text('MULTICAIXA Express',12,19);
-  pdf.text(`Data: ${formatReceiptDate(op.completedAt||op.date)}`,12,23);
+  pdf.text('Digitally signed by',12,15);
+  pdf.text('noreply@mcxexpress.co.ao',12,19);
+  pdf.text(`Date: ${_dateStr}`,12,23);
   pdf.setFontSize(16);
   pdf.setTextColor(200,0,0);
   pdf.text('Comprovativo Digital',105,32,{align:'center'});
@@ -36,15 +39,9 @@ async function buildReceiptPdf(op:Op){
   pdf.setFontSize(8);
   pdf.setTextColor(0,0,0);
   pdf.text(
-    'Detalhe da operação realizada através',
+    'Detalhe da operação realizada através do canal MULTICAIXA Express.',
     105,
-    48,
-    {align:'center'}
-  );
-  pdf.text(
-    'do canal MULTICAIXA Express.',
-    105,
-    53,
+    46,
     {align:'center'}
   );
   const rows=[
@@ -58,10 +55,10 @@ async function buildReceiptPdf(op:Op){
     ['Total',op.amount],
     ['Transacção',op.reference]
   ];
-  let y=80;
+  let y=68;
   pdf.setDrawColor(210,0,0);
   pdf.setLineWidth(0.45);
-  pdf.line(72,75,72,163);
+  pdf.line(72,63,72,151);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(8);
@@ -74,47 +71,46 @@ async function buildReceiptPdf(op:Op){
   pdf.setFontSize(8);
   pdf.setTextColor(0,0,0);
   pdf.text(
-    'Comprovativo da operação realizada através do MULTICAIXA Express.',
+    'Cuidar do presente, assegurar o futuro.',
     105,
-    224,
+    172,
     {align:'center'}
   );
-  pdf.setFont('helvetica','bold');
   pdf.text(
-    'MULTICAIXA Express',
+    'BPC - MCX EMV',
     105,
-    231,
+    179,
     {align:'center'}
   );
   pdf.setFillColor(218,218,199);
-  pdf.rect(12,237,186,20,'F');
-  pdf.setFont('helvetica','normal');
+  pdf.rect(12,185,186,20,'F');
   pdf.setFontSize(6);
   pdf.text(
-    'Para informações relacionadas com esta operação, consulte',
+    'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
     105,
-    244,
+    192,
     {align:'center'}
   );
   pdf.text(
-    'os canais de suporte disponibilizados na aplicação.',
+    '(+244) 222 641 840 | 923 168 840',
     105,
-    249,
+    198,
     {align:'center'}
   );
   pdf.setDrawColor(200,200,200);
   pdf.setLineWidth(0.25);
-  pdf.line(12,262,198,262);
+  pdf.line(12,209,198,209);
   pdf.setFontSize(6);
   pdf.setTextColor(120,120,120);
   pdf.text(
-    `Referência da operação: ${op.reference}`,
+    'IBAN: 0010007100150020007311 | 500290******0477',
     105,
-    268,
+    214,
     {align:'center'}
   );
   return pdf.output('blob');
-}async function shareReceipt(op:Op){const blob=await buildReceiptPdf(op);const file=new File([blob],`comprovativo-${op.reference}.pdf`,{type:'application/pdf'});if(typeof navigator!=='undefined'&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Comprovativo',text:`Comprovativo da operação ${op.reference}`});return}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);alert('PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.')}
+}
+async function shareReceipt(op:Op){const blob=await buildReceiptPdf(op);const file=new File([blob],`comprovativo-${op.reference}.pdf`,{type:'application/pdf'});if(typeof navigator!=='undefined'&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Comprovativo',text:`Comprovativo da operação ${op.reference}`});return}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);alert('PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.')}
 
 type Screen = 'splash'|'pin'|'home'|'pay'|'transfer'|'express'|'services'|'topup'|'balance'|'balance-result'|'recipient'|'review'|'pinConfirm'|'processing'|'result'|'receipt'|'history'|'activity-detail'|'cards'
 type Op = { type:string; recipient:string; account:string; amount:string; description:string; fee:string; tax:string; date:string; reference:string; status:'Concluída'|'Falhou'; holderName?:string; cardLast4?:string; completedAt?:string }
