@@ -58,7 +58,7 @@ async function buildReceiptPdf(op:Op){
   let y=64;
   pdf.setDrawColor(235,80,80);
   pdf.setLineWidth(1.0);
-  pdf.line(72,60,72,134);
+  pdf.line(72,61.5,72,135.5);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
@@ -74,13 +74,13 @@ async function buildReceiptPdf(op:Op){
   pdf.text(
     'Cuidar do presente, assegurar o futuro.',
     105,
-    140,
+    141.5,
     {align:'center'}
   );
   pdf.text(
     'BPC - MCX EMV',
     105,
-    148,
+    149.5,
     {align:'center'}
   );
   pdf.setFillColor(218,218,199);
