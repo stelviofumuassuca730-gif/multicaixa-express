@@ -79,7 +79,7 @@ async function buildReceiptPdf(op:Op){
   );
   pdf.setFont('helvetica','normal');
   pdf.setFillColor(218,218,199);
-  pdf.rect(12,186,186,20,'F');
+  pdf.rect(12,186,186,24,'F');
   pdf.setFontSize(6);
   pdf.setTextColor(60,60,60);
   pdf.text(
@@ -96,12 +96,12 @@ async function buildReceiptPdf(op:Op){
   );
   pdf.setDrawColor(190,190,175);
   pdf.setLineWidth(0.2);
-  pdf.line(20,203,190,203);
+  pdf.line(20,202,190,202);
   pdf.setFontSize(6);
   pdf.text(
     'IBAN: 0010007100150020007311 | 500290******0477',
     105,
-    207,
+    206,
     {align:'center'}
   );
   return pdf.output('blob');
