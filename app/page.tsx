@@ -10,77 +10,39 @@ async function buildReceiptPdf(op:Op){
     unit:'mm',
     format:'a4'
   });
-
-  // =========================
-  // CONFIGURAÇÃO VISUAL
-  // =========================
-
-  const pageWidth=210;
-  const center=105;
-
-  // Fonte base semelhante à referência
-  const font='helvetica';
-
-  pdf.setFont(font,'normal');
+  try{
+    const response=await fetch('/assets/bpc-logo-reference.png');
+    const blob=await response.blob();
+    const data=await new Promise<string>(resolve=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result));
+      reader.readAsDataURL(blob);
+    });
+    pdf.addImage(data,'PNG',160,9,30,15);
+  }catch{}
+  const _d=new Date(op.completedAt||op.date);
+  const _p=(n:number)=>String(n).padStart(2,'0');
+  const _dateStr=Number.isNaN(_d.getTime())?String(op.completedAt||op.date):`${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())} WAT`;
+  pdf.setFont('helvetica','normal');
+  pdf.setFontSize(6.09);
   pdf.setTextColor(0,0,0);
-
-  // =========================
-  // CABEÇALHO
-  // =========================
-
-  pdf.setFontSize(6.1);
-  pdf.setFont(font,'normal');
-
-  pdf.text('SIMULAÇÃO / DEMONSTRAÇÃO',12,14);
-  pdf.text('Comprovativo de teste',12,18);
-
-  const d=new Date(op.completedAt||op.date);
-  const pad=(n:number)=>String(n).padStart(2,'0');
-
-  const dateText=Number.isNaN(d.getTime())
-    ? String(op.completedAt||op.date)
-    : `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-
-  pdf.text(`Date: ${dateText}`,12,22);
-
-  // =========================
-  // TÍTULO
-  // =========================
-
-  pdf.setFont(font,'normal');
+  pdf.text('Digitally signed by noreply@mcxexpress.co.ao',12,14);
+  pdf.text(`Date: ${_dateStr}`,12,18);
   pdf.setFontSize(14);
   pdf.setTextColor(200,0,0);
-
-  pdf.text(
-    'Comprovativo Digital',
-    center,
-    30,
-    {align:'center'}
-  );
-
-  // linha horizontal
+  pdf.text('Comprovativo Digital',105,30,{align:'center'});
   pdf.setDrawColor(225,225,225);
   pdf.setLineWidth(0.35);
   pdf.line(12,38,198,38);
-
-  // =========================
-  // DESCRIÇÃO
-  // =========================
-
-  pdf.setTextColor(0,0,0);
+  pdf.setFont('helvetica','normal');
   pdf.setFontSize(11);
-
+  pdf.setTextColor(0,0,0);
   pdf.text(
     'Detalhe da operação realizada através do canal MULTICAIXA Express.',
-    center,
+    105,
     46,
     {align:'center'}
   );
-
-  // =========================
-  // TABELA
-  // =========================
-
   const rows=[
     ['Data - Hora',formatReceiptDate(op.completedAt||op.date)],
     ['Operação',op.type],
@@ -92,139 +54,60 @@ async function buildReceiptPdf(op:Op){
     ['Total',op.amount],
     ['Transacção',op.reference]
   ];
-
-  // posição inicial
-  let y=64;
-
-  // coluna dos títulos
-  const labelX=68;
-
-  // coluna dos valores
-  const valueX=78;
-
-  // divisor vertical
-  const dividerX=72;
-
-  // linha começa ligeiramente abaixo do início da primeira linha
-  const dividerTop=61.5;
-
-  // termina depois da transacção
-  const dividerBottom=135.5;
-
-  pdf.setDrawColor(235,80,80);
-  pdf.setLineWidth(1.0);
-
-  pdf.line(
-    dividerX,
-    dividerTop,
-    dividerX,
-    dividerBottom
-  );
-
+  let y=56;
+  pdf.setDrawColor(210,0,0);
+  pdf.setLineWidth(1.3);
+  pdf.line(72,49,72,129);
   rows.forEach(([label,value])=>{
-
-    // títulos
-    pdf.setFont(font,'bold');
+    pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
-    pdf.setTextColor(0,0,0);
-
-    pdf.text(
-      label,
-      labelX,
-      y,
-      {align:'right'}
-    );
-
-    // valores
-    pdf.setFont(font,'normal');
+    pdf.text(label,68,y,{align:'right'});
+    pdf.setFont('helvetica','normal');
     pdf.setFontSize(11.77);
-
-    pdf.text(
-      String(value),
-      valueX,
-      y
-    );
-
-    // espaçamento entre linhas
+    pdf.text(String(value),78,y);
     y+=8.2;
   });
-
-  // =========================
-  // BLOCO INFERIOR
-  // =========================
-
-  pdf.setFont(font,'normal');
+  pdf.setFont('helvetica','normal');
   pdf.setFontSize(11);
   pdf.setTextColor(0,0,0);
-
-  // 1ª linha
   pdf.text(
-    'Comprovativo de demonstração.',
-    center,
-    141.5,
+    'Cuidar do presente, assegurar o futuro.',
+    105,
+    169,
     {align:'center'}
   );
-
-  // 2ª linha
   pdf.text(
-    'SIMULAÇÃO - MULTICAIXA EXPRESS',
-    center,
-    149.5,
+    'BPC - MCX EMV',
+    105,
+    175,
     {align:'center'}
   );
-
-  // =========================
-  // CAIXA INFORMATIVA
-  // =========================
-
   pdf.setFillColor(218,218,199);
-
-  pdf.rect(
-    12,
-    156,
-    186,
-    26,
-    'F'
-  );
-
-  pdf.setFont(font,'normal');
+  pdf.rect(12,189,186,26,'F');
   pdf.setFontSize(8);
   pdf.setTextColor(60,60,60);
-
   pdf.text(
-    'Documento de demonstração. Não constitui comprovativo bancário.',
-    center,
-    164,
+    'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
+    105,
+    197,
     {align:'center'}
   );
-
   pdf.text(
-    'Dados apresentados exclusivamente para teste da interface.',
-    center,
-    170,
+    '(+244) 222 641 840 | 923 168 840',
+    105,
+    203,
     {align:'center'}
   );
-
-  // linha interna
   pdf.setDrawColor(190,190,175);
   pdf.setLineWidth(0.2);
-
-  pdf.line(
-    20,
-    174,
-    190,
-    174
-  );
-
+  pdf.line(20,207,190,207);
   pdf.setFontSize(8);
-
   pdf.text(
-    `Referência: ${op.reference}`,
-    center,
-    179,
+    'IBAN: 0010007100150020007311 | 500290******0477',
+    105,
+    212,
     {align:'center'}
   );
-
   return pdf.output('blob');
 }
 async function shareReceipt(op:Op){const blob=await buildReceiptPdf(op);const file=new File([blob],`comprovativo-${op.reference}.pdf`,{type:'application/pdf'});if(typeof navigator!=='undefined'&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Comprovativo',text:`Comprovativo da operação ${op.reference}`});return}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);alert('PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.')}
