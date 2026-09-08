@@ -1,43 +1,80 @@
-async function buildReceiptPdf(op:Op){
+﻿async function buildReceiptPdf(op:Op){
   const pdf=new jsPDF({
     orientation:'portrait',
     unit:'mm',
     format:'a4'
   });
-  try{
-    const response=await fetch('/assets/bpc-logo-reference.png');
-    const blob=await response.blob();
-    const data=await new Promise<string>(resolve=>{
-      const reader=new FileReader();
-      reader.onload=()=>resolve(String(reader.result));
-      reader.readAsDataURL(blob);
-    });
-    pdf.addImage(data,'PNG',166,10,24,12);
-  }catch{}
-  const _d=new Date(op.completedAt||op.date);
-  const _p=(n:number)=>String(n).padStart(2,'0');
-  const _dateStr=Number.isNaN(_d.getTime())?String(op.completedAt||op.date):`${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())} WAT`;
-  pdf.setFont('helvetica','normal');
-  pdf.setFontSize(6.09);
+
+  // =========================
+  // CONFIGURAÇÃO VISUAL
+  // =========================
+
+  const pageWidth=210;
+  const center=105;
+
+  // Fonte base semelhante à referência
+  const font='helvetica';
+
+  pdf.setFont(font,'normal');
   pdf.setTextColor(0,0,0);
-  pdf.text('Digitally signed by',12,14);
-  pdf.text('noreply@mcxexpress.co.ao',12,18);
-  pdf.text(`Date: ${_dateStr}`,12,22);
+
+  // =========================
+  // CABEÇALHO
+  // =========================
+
+  pdf.setFontSize(6.1);
+  pdf.setFont(font,'normal');
+
+  pdf.text('SIMULAÇÃO / DEMONSTRAÇÃO',12,14);
+  pdf.text('Comprovativo de teste',12,18);
+
+  const d=new Date(op.completedAt||op.date);
+  const pad=(n:number)=>String(n).padStart(2,'0');
+
+  const dateText=Number.isNaN(d.getTime())
+    ? String(op.completedAt||op.date)
+    : `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+  pdf.text(`Date: ${dateText}`,12,22);
+
+  // =========================
+  // TÍTULO
+  // =========================
+
+  pdf.setFont(font,'normal');
   pdf.setFontSize(14);
   pdf.setTextColor(200,0,0);
-  pdf.text('Comprovativo Digital',105,30,{align:'center'});
+
+  pdf.text(
+    'Comprovativo Digital',
+    center,
+    30,
+    {align:'center'}
+  );
+
+  // linha horizontal
   pdf.setDrawColor(225,225,225);
   pdf.setLineWidth(0.35);
   pdf.line(12,38,198,38);
-  pdf.setFont('helvetica','normal');
-  pdf.setFontSize(11);
+
+  // =========================
+  // DESCRIÇÃO
+  // =========================
+
   pdf.setTextColor(0,0,0);
+  pdf.setFontSize(11);
+
   pdf.text(
     'Detalhe da operação realizada através do canal MULTICAIXA Express.',
-    105,
+    center,
     46,
     {align:'center'}
   );
+
+  // =========================
+  // TABELA
+  // =========================
+
   const rows=[
     ['Data - Hora',formatReceiptDate(op.completedAt||op.date)],
     ['Operação',op.type],
@@ -49,59 +86,138 @@ async function buildReceiptPdf(op:Op){
     ['Total',op.amount],
     ['Transacção',op.reference]
   ];
+
+  // posição inicial
   let y=64;
-  pdf.setDrawColor(210,0,0);
-  pdf.setLineWidth(1.3);
-  pdf.line(72,57,72,134);
+
+  // coluna dos títulos
+  const labelX=68;
+
+  // coluna dos valores
+  const valueX=78;
+
+  // divisor vertical
+  const dividerX=72;
+
+  // linha começa ligeiramente abaixo do início da primeira linha
+  const dividerTop=61.5;
+
+  // termina depois da transacção
+  const dividerBottom=135.5;
+
+  pdf.setDrawColor(235,80,80);
+  pdf.setLineWidth(1.0);
+
+  pdf.line(
+    dividerX,
+    dividerTop,
+    dividerX,
+    dividerBottom
+  );
+
   rows.forEach(([label,value])=>{
-    pdf.setFont('helvetica','bold');
+
+    // títulos
+    pdf.setFont(font,'bold');
     pdf.setFontSize(11);
-    pdf.text(label,68,y,{align:'right'});
-    pdf.setFont('helvetica','normal');
+    pdf.setTextColor(0,0,0);
+
+    pdf.text(
+      label,
+      labelX,
+      y,
+      {align:'right'}
+    );
+
+    // valores
+    pdf.setFont(font,'normal');
     pdf.setFontSize(11.77);
-    pdf.text(String(value),78,y);
+
+    pdf.text(
+      String(value),
+      valueX,
+      y
+    );
+
+    // espaçamento entre linhas
     y+=8.2;
   });
-  pdf.setFont('helvetica','normal');
+
+  // =========================
+  // BLOCO INFERIOR
+  // =========================
+
+  pdf.setFont(font,'normal');
   pdf.setFontSize(11);
   pdf.setTextColor(0,0,0);
+
+  // 1ª linha
   pdf.text(
-    'Cuidar do presente, assegurar o futuro.',
-    105,
-    140,
+    'Comprovativo de demonstração.',
+    center,
+    141.5,
     {align:'center'}
   );
+
+  // 2ª linha
   pdf.text(
-    'BPC - MCX EMV',
-    105,
-    148,
+    'SIMULAÇÃO - MULTICAIXA EXPRESS',
+    center,
+    149.5,
     {align:'center'}
   );
+
+  // =========================
+  // CAIXA INFORMATIVA
+  // =========================
+
   pdf.setFillColor(218,218,199);
-  pdf.rect(12,156,186,26,'F');
+
+  pdf.rect(
+    12,
+    156,
+    186,
+    26,
+    'F'
+  );
+
+  pdf.setFont(font,'normal');
   pdf.setFontSize(8);
   pdf.setTextColor(60,60,60);
+
   pdf.text(
-    'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
-    105,
+    'Documento de demonstração. Não constitui comprovativo bancário.',
+    center,
     164,
     {align:'center'}
   );
+
   pdf.text(
-    '(+244) 222 641 840 | 923 168 840',
-    105,
+    'Dados apresentados exclusivamente para teste da interface.',
+    center,
     170,
     {align:'center'}
   );
+
+  // linha interna
   pdf.setDrawColor(190,190,175);
   pdf.setLineWidth(0.2);
-  pdf.line(20,174,190,174);
+
+  pdf.line(
+    20,
+    174,
+    190,
+    174
+  );
+
   pdf.setFontSize(8);
+
   pdf.text(
-    'IBAN: 0010007100150020007311 | 500290******0477',
-    105,
+    `Referência: ${op.reference}`,
+    center,
     179,
     {align:'center'}
   );
+
   return pdf.output('blob');
 }
