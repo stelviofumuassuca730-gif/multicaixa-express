@@ -57,8 +57,8 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   ];
   let y=62;
   pdf.setDrawColor(210,0,0);
-  pdf.setLineWidth(1.3);
-  pdf.line(105,59,105,135);
+  pdf.setLineWidth(1.1);
+  pdf.line(105,61,105,135);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
@@ -80,7 +80,7 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   pdf.text(
     'BPC - MCX EMV',
     105,
-    185,
+    187,
     {align:'center'}
   );
   pdf.setFillColor(218,218,199);
@@ -90,7 +90,7 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   pdf.text(
     'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
     105,
-    197,
+    184,
     {align:'center'}
   );
   pdf.text(
@@ -101,7 +101,7 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   );
   pdf.setDrawColor(190,190,175);
   pdf.setLineWidth(0.2);
-  pdf.line(20,207,190,207);
+  pdf.line(20,206,190,206);
   pdf.setFontSize(8);
   pdf.text(
     'IBAN: 0010007100150020007311 | 500290******0477',
