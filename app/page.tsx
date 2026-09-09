@@ -25,9 +25,10 @@ async function buildReceiptPdf(op:Op){
   const _dateStr=Number.isNaN(_d.getTime())?String(op.completedAt||op.date):`${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())} WAT`;
   pdf.setFont('helvetica','normal');
   pdf.setFontSize(6.09);
-  pdf.setTextColor(0,0,0);
-  pdf.text('Digitally signed by noreply@mcxexpress.co.ao',12,14);
-  pdf.text(`Date: ${_dateStr}`,12,18);
+pdf.setTextColor(0,0,0);
+pdf.text('Digitally signed by', 12, 12);
+pdf.text('noreply@mcxexpress.co.ao', 12, 15);
+pdf.text(`Date: ${_dateStr}`, 12, 18);
   pdf.setFontSize(14);
   pdf.setTextColor(200,0,0);
   pdf.text('Comprovativo Digital',105,30,{align:'center'});
@@ -54,10 +55,10 @@ async function buildReceiptPdf(op:Op){
     ['Total',op.amount],
     ['Transacção',op.reference]
   ];
-  let y=56;
+  let y=62;
   pdf.setDrawColor(210,0,0);
   pdf.setLineWidth(1.3);
-  pdf.line(105,49,105,129);
+  pdf.line(105,59,105,135);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
@@ -73,13 +74,13 @@ async function buildReceiptPdf(op:Op){
   pdf.text(
     'Cuidar do presente, assegurar o futuro.',
     105,
-    135,
+    175,
     {align:'center'}
   );
   pdf.text(
     'BPC - MCX EMV',
     105,
-    141,
+    185,
     {align:'center'}
   );
   pdf.setFillColor(218,218,199);
