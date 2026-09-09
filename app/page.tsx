@@ -74,7 +74,7 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   pdf.text(
     'Cuidar do presente, assegurar o futuro.',
     105,
-    175,
+    181,
     {align:'center'}
   );
   pdf.text(
@@ -90,13 +90,13 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   pdf.text(
     'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
     105,
-    184,
+    196,
     {align:'center'}
   );
   pdf.text(
     '(+244) 222 641 840 | 923 168 840',
     105,
-    203,
+    202,
     {align:'center'}
   );
   pdf.setDrawColor(190,190,175);
