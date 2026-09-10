@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Multicaixa Express',
   description: 'App de simulacao MULTICAIXA Express',
   generator: 'v0.app',
-  manifest: '/manifest.json',
+  manifest: '/manifest.webmanifest',
   icons: {
     icon: [
       {
