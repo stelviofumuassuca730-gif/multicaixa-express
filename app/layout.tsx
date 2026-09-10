@@ -9,23 +9,12 @@ export const metadata: Metadata = {
   description: 'App de simulacao MULTICAIXA Express',
   generator: 'v0.app',
   manifest: '/manifest.webmanifest',
+
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
+    icon: '/icon-512.png',
     apple: '/apple-icon.png',
   },
+
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
