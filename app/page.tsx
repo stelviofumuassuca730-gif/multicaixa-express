@@ -153,6 +153,7 @@ type Op = {
 
 const money = (value: string) => {
   const raw = value.replace(/[^0-9,.-]/g, '').trim()
+
   if (!raw) return 0
 
   const normalized = raw.includes(',')
