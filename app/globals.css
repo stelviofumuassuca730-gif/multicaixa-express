@@ -913,7 +913,21 @@
     border-radius: 14px;
     font-size: 17px;
   }
+  /* Ajuste do IBAN e posição dos botões */
+.iban-review .confirm-recipient strong:first-child {
+  white-space: nowrap !important;
+  display: block;
+  width: 100%;
+  font-size: 15px !important;
+  letter-spacing: -0.4px;
+  text-align: center;
+  overflow: hidden;
+}
 
+.iban-review .confirm-actions {
+  margin-top: 90px !important;
+
+}
   /* RECEIPT */
   .transfer-result {
     min-height: 100dvh;
