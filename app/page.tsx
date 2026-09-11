@@ -113,16 +113,61 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
 }
 async function shareReceipt(op:Op){const blob=await buildReceiptPdf(op);const file=new File([blob],`comprovativo-${op.reference}.pdf`,{type:'application/pdf'});if(typeof navigator!=='undefined'&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Comprovativo',text:`Comprovativo da operação ${op.reference}`});return}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);alert('PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.')}
 
-type Screen = 'splash'|'pin'|'home'|'pay'|'transfer'|'express'|'services'|'topup'|'balance'|'balance-result'|'recipient'|'review'|'pinConfirm'|'processing'|'result'|'receipt'|'history'|'activity-detail'|'cards'
-type Op = { type:string; recipient:string; account:string; amount:string; description:string; fee:string; tax:string; date:string; reference:string; status:'Concluída'|'Falhou'; holderName?:string; cardLast4?:string; completedAt?:string }
-const money = (value:string) => {const raw=value.replace(/[^0-9,.-]/g,'').trim();if(!raw)return 0;const normalized=raw.includes(',')?raw.replace(/\./g,'').replace(',','.'):raw.replace(/\.(?=\d{3}(?:\.|$))/g,'');return Number(normalized)||0}
+type Screen =
+  | 'splash'
+  | 'pin'
+  | 'home'
+  | 'pay'
+  | 'transfer'
+  | 'express'
+  | 'services'
+  | 'topup'
+  | 'balance'
+  | 'balance-result'
+  | 'recipient'
+  | 'review'
+  | 'pinConfirm'
+  | 'processing'
+  | 'result'
+  | 'receipt'
+  | 'history'
+  | 'activity-detail'
+  | 'cards'
+  | 'channels'
+
+type Op = {
+  type: string
+  recipient: string
+  account: string
+  amount: string
+  description: string
+  fee: string
+  tax: string
+  date: string
+  reference: string
+  status: 'Concluída' | 'Falhou'
+  holderName?: string
+  cardLast4?: string
+  completedAt?: string
+}
+
+const money = (value: string) => {
+  const raw = value.replace(/[^0-9,.-]/g, '').trim()
+  if (!raw) return 0
+
+  const normalized = raw.includes(',')
+    ? raw.replace(/\./g, '').replace(',', '.')
+    : raw.replace(/\.(?=\d{3}(?:\.|$))/g, '')
+
+  return Number(normalized) || 0
+}
 const format = (n:number) => n.toLocaleString('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2})+' Kz'
 const MOCK_BALANCE='2.500.000,00 Kz'
 const formatReceiptDate=(value:string)=>{const date=new Date(value);if(Number.isNaN(date.getTime()))return value;const pad=(n:number)=>String(n).padStart(2,'0');return `${pad(date.getDate())}-${pad(date.getMonth()+1)}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`}
 const formatCardLast4=(value?:string)=>`**** ${String(value||'8418').replace(/\D/g,'').slice(-4).padStart(4,'0')}`
 const normalizeIban=(value:string)=>value.toUpperCase().replace(/[\s.]/g,'')
 const formatIban=(value:string)=>{const normalized=normalizeIban(value);return normalized.replace(/(.{4})(?=.)/g,'$1.')}
-const isValidAngolaIban=(value:string)=>{const normalized=normalizeIban(value);return /^AO\d{2}\d{21}$/.test(normalized)}
+const isValidAngolaIban = (value:string)=>{const normalized = normalizeIban(value); return /^AO\d{2}\d{21}$/.test(normalized)}
 const menuItems = [[ArrowRight,'Início'],[WalletCards,'Gestão de Cartões'],[Receipt,'Actividade'],[Settings,'Configurações'],[Headphones,'Apoio ao Cliente'],[Star,'Sobre MCX Express'],[ShieldCheck,'Privacidade e Termos'],[CircleHelp,'Perguntas frequentes']] as const
 
 
@@ -149,19 +194,264 @@ function Bottom({go,active}:{go:(s:Screen)=>void;active:Screen}){return <nav cla
 function Drawer({close,go}:{close:()=>void;go:(s:Screen)=>void}){return <><button className="drawer-backdrop" onClick={close} aria-label="Fechar menu"/><aside className="drawer"><div className="drawer-time">17:31</div>{menuItems.map(([Icon,label])=><button key={label} onClick={()=>{if(label==='Início')go('home');if(label==='Actividade')go('history');if(label==='Gestão de Cartões')go('cards');close()}}><Icon size={24}/><strong>{label}</strong></button>)}</aside><button className="drawer-close" onClick={close} aria-label="Fechar"><X size={22}/></button></>}
 function TransferIcon({kind,inactive}:{kind:'iban'|'express'|'cards'|'favorite';inactive?:boolean}){const files={iban:'transferencias',express:'transferencias-express',cards:'transferencias-cartoes',favorite:'favoritos'};return <img className={`transfer-icon transfer-icon-image${inactive?' op-inactive-icon':''}`} src={`/icons/${files[kind]}.png`} alt="" aria-hidden="true"/>}
 function Channels({back,go,selectedCard}:{back:()=>void;go:(s:Screen)=>void;selectedCard:number}){const expressInactive=selectedCard===1;return <main className="phone-shell"><Header back={back}/><section className="transfer-menu"><h1>TRANSFERÊNCIAS</h1><div className="transfer-menu-card"><Card bpc={selectedCard===1}/><div className="card-caption">Cartão {selectedCard+1}</div></div><div className="transfer-options"><button onClick={()=>go('transfer')}><TransferIcon kind="iban"/><span>TRANSFERÊNCIAS<br/>IBAN</span></button><button className={expressInactive?'op-inactive':''} aria-disabled={expressInactive} onClick={()=>{if(expressInactive)return;go('express')}}><TransferIcon kind="express" inactive={expressInactive}/><span>TRANSFERÊNCIAS<br/>EXPRESS</span></button><button onClick={()=>go('pay')}><TransferIcon kind="cards"/><span>TRANSFERÊNCIA<br/>ENTRE CARTÕES</span></button><button onClick={()=>go('history')}><TransferIcon kind="favorite"/><span>FAVORITOS</span></button></div></section></main>}
-function Form({kind,back,submit,initial,selectedCard}:{kind:Screen;back:()=>void;submit:(data:{recipient:string;account:string;amount:string;description:string;holderName?:string})=>void;initial?:Partial<Op>;selectedCard:number}){const config={pay:['PAGAMENTOS','Entidade / referência','Número da entidade'],transfer:['TRANSFERÊNCIAS','Destinatário','Nome completo'],express:['EXPRESS','Número de telefone','923 000 000'],services:['SERVIÇOS','Serviço','Água, TV ou internet'],topup:['RECARGAS','Operadora / número','Unitel: 923 000 000']}[kind]||['OPERAÇÃO','Destinatário','Nome'];const [recipient,setRecipient]=useState(initial?.recipient||'');const [holderName,setHolderName]=useState(initial?.holderName||'');const [account,setAccount]=useState(initial?.account||'');const [favorite,setFavorite]=useState(false);const [amount,setAmount]=useState(initial?.amount||'');const [description,setDescription]=useState(initial?.description||'');const [error,setError]=useState('');const send=()=>{const value=money(amount);const transferRecipient=kind==='transfer'?(recipient||'ALBERTO CALUME NZINGA NKONDO'):recipient;if(!account||!value||value<=0){setError('Preencha todos os campos com valores válidos.');return}if(kind==='transfer'&&!isValidAngolaIban(account)){setError('IBAN inválido. Use o formato AO seguido de 23 algarismos, com pontos, espaços ou hífens opcionais.');return}if(kind==='express'&&!/^9\d{8}$/.test(account.replace(/\D/g,''))){setError('Número de telefone inválido.');return}submit({recipient:kind==='transfer'?'':transferRecipient,holderName:kind==='transfer'?'':undefined,account:kind==='transfer'?formatIban(account):account,amount:format(value),description})};return <main className="phone-shell"><Header back={back}/><section className={`form-screen ${kind==='transfer'?'iban-form':''}`}><h1>{kind==='transfer'?'TRANSFERÊNCIA IBAN':config[0]}</h1>{kind==='transfer'&&<><div className="form-card"><Card bpc={selectedCard===1}/><div className="card-caption">Cartão {selectedCard+1}</div></div></>}{kind!=='express'&&kind!=='transfer'&&<label>{config[1]}<input value={recipient} onChange={e=>setRecipient(e.target.value)} placeholder={config[2]}/></label>}<label>{kind==='transfer'?'IBAN':kind==='express'?'Número':kind==='topup'?'Número':'Referência'}<input value={kind==='express'?account:account} onChange={e=>{setAccount(kind==='transfer'?formatIban(e.target.value):e.target.value);if(kind==='express')setRecipient(e.target.value)}} placeholder={kind==='transfer'?'AO06':kind==='express'?'923 000 000':config[2]}/></label>{kind==='transfer'&&<><button type="button" className="favorite-link" onClick={()=>setFavorite(v=>!v)}>{favorite?'Favorito adicionado':'+Favoritos'}</button><button type="button" className={`favorite-picker ${favorite?'selected':''}`} onClick={()=>setFavorite(v=>!v)}><Star size={32}/><span>{favorite?'Favorito adicionado':'Adicionar Favorito'}</span><ChevronDown size={24}/></button></>}<label>Valor<input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="Kz" inputMode="decimal"/></label>{kind!=='transfer'&&<label>Descrição (opcional)<input value={description} onChange={e=>setDescription(e.target.value)} placeholder="Descrição"/></label>}{error&&<p className="error">{error}</p>}<button className="primary" onClick={send}>{kind==='transfer'?'Enviar':'Continuar'} <ArrowRight size={20}/></button></section></main>}
+type FormKind = 'pay' | 'transfer' | 'express' | 'services' | 'topup'
+
+function Form({
+  kind,
+  back,
+  submit,
+  initial,
+  selectedCard,
+}: {
+  kind: FormKind
+  back: () => void
+  submit: (data: {
+    recipient: string
+    account: string
+    amount: string
+    description: string
+    holderName?: string
+  }) => void
+  initial?: Partial<Op>
+  selectedCard: number
+}) {const config={pay:['PAGAMENTOS','Entidade / referência','Número da entidade'],transfer:['TRANSFERÊNCIAS','Destinatário','Nome completo'],express:['EXPRESS','Número de telefone','923 000 000'],services:['SERVIÇOS','Serviço','Água, TV ou internet'],topup:['RECARGAS','Operadora / número','Unitel: 923 000 000']}[kind]||['OPERAÇÃO','Destinatário','Nome'];const [recipient,setRecipient]=useState(initial?.recipient||'');const [holderName,setHolderName]=useState(initial?.holderName||'');const [account,setAccount]=useState(initial?.account||'');const [favorite,setFavorite]=useState(false);const [amount,setAmount]=useState(initial?.amount||'');const [description,setDescription]=useState(initial?.description||'');const [error,setError]=useState('');const send=()=>{const value=money(amount);const transferRecipient=kind==='transfer'?(recipient||'ALBERTO CALUME NZINGA NKONDO'):recipient;if(!account||!value||value<=0){setError('Preencha todos os campos com valores válidos.');return}if(kind==='transfer'&&!isValidAngolaIban(account)){setError('IBAN inválido. Use o formato AO seguido de 23 algarismos, com pontos, espaços ou hífens opcionais.');return}if(kind==='express'&&!/^9\d{8}$/.test(account.replace(/\D/g,''))){setError('Número de telefone inválido.');return}submit({recipient:kind==='transfer'?'':transferRecipient,holderName:kind==='transfer'?'':undefined,account:kind==='transfer'?formatIban(account):account,amount:format(value),description})};return <main className="phone-shell"><Header back={back}/><section className={`form-screen ${kind==='transfer'?'iban-form':''}`}><h1>{kind==='transfer'?'TRANSFERÊNCIA IBAN':config[0]}</h1>{kind==='transfer'&&<><div className="form-card"><Card bpc={selectedCard===1}/><div className="card-caption">Cartão {selectedCard+1}</div></div></>}{kind!=='express'&&kind!=='transfer'&&<label>{config[1]}<input value={recipient} onChange={e=>setRecipient(e.target.value)} placeholder={config[2]}/></label>}<label>{kind==='transfer'?'IBAN':kind==='express'?'Número':kind==='topup'?'Número':'Referência'}<input value={kind==='express'?account:account} onChange={e=>{setAccount(kind==='transfer'?formatIban(e.target.value):e.target.value);if(kind==='express')setRecipient(e.target.value)}} placeholder={kind==='transfer'?'AO06':kind==='express'?'923 000 000':config[2]}/></label>{kind==='transfer'&&<><button type="button" className="favorite-link" onClick={()=>setFavorite(v=>!v)}>{favorite?'Favorito adicionado':'+Favoritos'}</button><button type="button" className={`favorite-picker ${favorite?'selected':''}`} onClick={()=>setFavorite(v=>!v)}><Star size={32}/><span>{favorite?'Favorito adicionado':'Adicionar Favorito'}</span><ChevronDown size={24}/></button></>}<label>Valor<input value={amount} onChange={e=>setAmount(e.target.value)} placeholder="Kz" inputMode="decimal"/></label>{kind!=='transfer'&&<label>Descrição (opcional)<input value={description} onChange={e=>setDescription(e.target.value)} placeholder="Descrição"/></label>}{error&&<p className="error">{error}</p>}<button className="primary" onClick={send}>{kind==='transfer'?'Enviar':'Continuar'} <ArrowRight size={20}/></button></section></main>}
 function RecipientName({op,back,continueTo}:{op:Op;back:()=>void;continueTo:(name:string)=>void}){const [name,setName]=useState('');return <main className="phone-shell"><Header back={back}/><section className="form-screen"><h1>NOME DO DESTINATÁRIO</h1><label>Nome do destinatário<input value={name} onChange={e=>setName(e.target.value)} placeholder="Digite o nome do destinatário"/></label><button className="primary" disabled={!name.trim()} onClick={()=>continueTo(name.trim())}>CONTINUAR</button></section></main>}
 function Review({op,back,confirm}:{op:Op;back:()=>void;confirm:()=>void}){const [validating,setValidating]=useState(false);const submit=()=>{setValidating(true);setTimeout(confirm,900)};const iban=op.type==='Transferência Bancária';return <main className={`phone-shell ${iban?'iban-review':''}`}><Header back={back}/><section className="review"><h1>{iban?'TRANSFERÊNCIA IBAN':'CONFIRMAR OPERAÇÃO'}</h1>{iban?<div className="iban-confirmation"><div className="confirm-amount"><strong>{op.amount}</strong><span>MONTANTE</span></div><div className="confirm-recipient"><strong>{op.account}</strong><span>IBAN</span><strong>{op.recipient}</strong><span>TITULAR</span></div></div>:<div className="review-box">{[['Tipo',op.type],['Destinatário',op.holderName||op.recipient],['IBAN',formatIban(op.account)],['Montante',op.amount],['Comissão','-'],['Imposto','-'],['Total',op.amount]].map(([a,b])=><p key={a}><b>{a}</b><span>{b}</span></p>)}</div>}<div className="confirm-total"><div><span>Custo</span><b>Total</b></div><div><span>Isento</span><b>{op.amount}</b></div></div><div className="confirm-actions"><button className="secondary" onClick={back}>Cancelar</button><button className="primary" onClick={submit}>Confirmar</button></div></section>{validating&&<div className="validation-overlay"><Loader2 className="processing-spinner" size={42}/></div>}</main>}
 function Processing({next,go}:{next:Screen;go:(s:Screen)=>void}){useEffect(()=>{const timer=setTimeout(()=>go(next),1200);return()=>clearTimeout(timer)},[go,next]);return <main className="phone-shell processing-screen"><div className="processing-logo"><Brand/></div><Loader2 className="processing-spinner" size={58}/></main>}
-function TransferResult({op,go}:{op:Op;go:(s:Screen)=>void}){const [visible,setVisible]=useState(false);return <main className="phone-shell transfer-result"><header className="result-header"><img className="result-header-banner" src="/assets/result-header-banner.jpg" alt="MULTICAIXA Express"/></header><div className="result-meta"><span className="result-iban">
-  <b>IBAN:</b> {formatIban(op.account)}
-</><span className="result-meta-right">{formatReceiptDate(op.completedAt||op.date)}<br/>500294******8418</span></div><h1>{(op.type==='Transferência Bancária'?'TRANSFERÊNCIA IBAN':op.type.toUpperCase())} REALIZADA COM SUCESSO</h1><div className="result-values"><strong>{op.amount}</strong><small>MONTANTE</small><strong>{op.account}</strong><small>IBAN</small><strong>{op.recipient}</strong><small>TITULAR</small></div><div className="result-cost"><span>Custo<br/><b>Total</b></span><span>Isento<br/><b>{op.amount}</b></span></div><div className="current-balance"><span>SALDO ACTUAL</span><strong>{visible?MOCK_BALANCE:'*****'}</strong><button onClick={()=>setVisible(v=>!v)} aria-label={visible?'Ocultar saldo':'Mostrar saldo'}>{visible?<EyeOff size={24}/>:<Eye size={24}/>}</button></div><div className="result-actions"><button onClick={()=>window.open(`mailto:?subject=Comprovativo&body=${op.reference}`,'_self')}><Mail size={26}/>Enviar por email</button><button onClick={()=>shareReceipt(op)}><Share2 size={26}/>Guardar e Partilhar</button></div><button className="primary" onClick={()=>go('home')}>Continuar</button></main>}
+function TransferResult({
+  op,
+  go,
+}: {
+  op: Op
+  go: (s: Screen) => void
+}) {
+  const [visible, setVisible] = useState(false)
+
+  return (
+    <main className="phone-shell transfer-result">
+      <header className="result-header">
+        <img
+          className="result-header-banner"
+          src="/assets/result-header-banner.jpg"
+          alt="MULTICAIXA Express"
+        />
+      </header>
+
+      <div className="result-meta">
+        <span className="result-iban">
+          <b>IBAN:</b> {formatIban(op.account)}
+        </span>
+
+        <span className="result-meta-right">
+          {formatReceiptDate(op.completedAt || op.date)}
+          <br />
+          500294******8418
+        </span>
+      </div>
+
+      <h1>
+        {op.type === 'Transferência Bancária'
+          ? 'TRANSFERÊNCIA IBAN'
+          : op.type.toUpperCase()}{' '}
+        REALIZADA COM SUCESSO
+      </h1>
+
+      <div className="result-values">
+        <strong>{op.amount}</strong>
+        <small>MONTANTE</small>
+
+        <strong>{op.account}</strong>
+        <small>IBAN</small>
+
+        <strong>{op.recipient}</strong>
+        <small>TITULAR</small>
+      </div>
+
+      <div className="result-cost">
+        <span>
+          Custo
+          <br />
+          <b>Total</b>
+        </span>
+
+        <span>
+          Isento
+          <br />
+          <b>{op.amount}</b>
+        </span>
+      </div>
+
+      <div className="current-balance">
+        <span>SALDO ACTUAL</span>
+
+        <strong>{visible ? MOCK_BALANCE : '*****'}</strong>
+
+        <button
+          onClick={() => setVisible((v) => !v)}
+          aria-label={visible ? 'Ocultar saldo' : 'Mostrar saldo'}
+        >
+          {visible ? <EyeOff size={24} /> : <Eye size={24} />}
+        </button>
+      </div>
+
+      <div className="result-actions">
+        <button
+          onClick={() =>
+            window.open(
+              `mailto:?subject=Comprovativo&body=${op.reference}`,
+              '_self'
+            )
+          }
+        >
+          <Mail size={26} />
+          Enviar por email
+        </button>
+
+        <button onClick={() => shareReceipt(op)}>
+          <Share2 size={26} />
+          Guardar e Partilhar
+        </button>
+      </div>
+
+      <button className="primary" onClick={() => go('home')}>
+        Continuar
+        </button>
+      </main>
+  )
+}
+
 function Consultas({go,back,selectedCard}:{go:(s:Screen)=>void;back:()=>void;selectedCard:number}){return <main className="phone-shell"><Header back={back}/><section className="consultas-screen"><h1>CONSULTAS</h1><div className="form-card"><Card bpc={selectedCard===1}/><div className="card-caption">Cartão {selectedCard+1}</div></div><div className="consultas-options"><button onClick={()=>go('balance-result')}><span className="consultas-icon">?</span><strong>SALDOS</strong></button><button onClick={()=>go('history')}><Receipt size={48}/><strong>MOVIMENTOS</strong></button><button onClick={()=>go('transfer')}><FileText size={48}/><strong>IBAN</strong></button></div></section></main>}
 function BalanceResult({go,selectedCard}:{go:(s:Screen)=>void;selectedCard:number}){const [visible,setVisible]=useState(true);return <main className="phone-shell balances-screen"><Header back={()=>go('balance')}/><section><h1>SALDOS</h1><div className="form-card"><Card bpc={selectedCard===1}/><div className="card-caption">Cartão {selectedCard+1}</div></div><div className="balance-box"><strong>{visible?'2.500.000,00 Kz':'*****'}</strong><div><span>{visible?'2.500.000,00 Kz':'*****'}<small>Autorizado</small></span><span>{visible?'2.500.000,00 Kz':'*****'}<small>Contabilístico</small></span></div></div></section></main>}
 function Result({op,success,go}:{op:Op;success:boolean;go:(s:Screen)=>void}){return <main className="phone-shell result"><div className={success?'success-mark':'failure-mark'}>{success?<Check size={48}/>:<X size={48}/>}</div><h1>{success?'Operação concluída':'Operação não concluída'}</h1><p>{success?'A operação foi processada com sucesso.':'Não foi possível processar a operação. Tente novamente.'}</p>{success&&<button className="primary" onClick={()=>go('receipt')}>Ver comprovativo</button>}<button className="secondary" onClick={()=>go('home')}>Novo pagamento</button></main>}
 function ReceiptView({op,back}:{op:Op;back:()=>void}){return <main className="receipt-page"><button className="receipt-back" onClick={back} aria-label="Voltar"><ChevronLeft size={28}/></button><div className="receipt-head"><span>Digitalmente signed by<br/>multicaixaexpress.co.ao<br/>Date: {formatReceiptDate(op.completedAt||op.date)}</span><img src="/assets/bpc-logo-reference.png" alt="BPC"/></div><h1>Comprovativo Digital</h1><hr/><p className="receipt-intro">Detalhe da operação realizada através do canal MULTICAIXA Express.</p><div className="receipt-table">{[['Data - Hora',formatReceiptDate(op.completedAt||op.date)],['Operação',op.type],['Destinatário',op.holderName||op.recipient],['IBAN',formatIban(op.account)],['Montante',op.amount],['Comissão','-'],['Imposto','-'],['Total',op.amount],['Transação',op.reference],['Estado',op.status]].map(([a,b])=><p key={a}><b>{a}</b><span>{b}</span></p>)}</div><div className="institution">Cuidar do presente, assegurar o futuro.<br/>BPC - MCX EMV</div><footer>Em caso de necessidade, contacte a nossa linha de apoio MULTICAIXA (24h):<br/>(+244) 222 641 840 | 923 168 840</footer></main>}
-function ActivityDetail({op,go}:{op:Op|null|undefined;go:(s:Screen)=>void}){if(!op)return <main className="phone-shell activity-detail"><Header back={()=>go('history')}/><section><h1>DETALHE DA TRANSFERÊNCIA</h1><p>Selecione uma atividade para consultar os detalhes.</p></section></main>;return <main className="phone-shell activity-detail"><Header back={()=>go('history')}/><section><h1>{op?.type?.includes('Express')?'DETALHE DA TRANSFERÊNCIA':'DETALHE DA ACTIVIDADE'}</h1><div className="detail-summary"><img src="/assets/bpc-card-display.png" alt="Cartão BPC"/><>500294******1234</span></div><div className="detail-table">{[['Data-Hora',op.date],['Montante (Kz)',op.amount],['Custo (Kz)','Isento'],['Total (Kz)',op.amount],['Estado',op.status],['Transacção',op.reference],['IBAN Dest.',op.account],['Nome Dest.',op.recipient]].map(([a,b])=><p key={a}><b>{a}</b><span>{b}</span></p>)}</div><button className="reuse-link" onClick={()=>go('receipt')}>VER COMPROVATIVO</button><button className="reuse-link" onClick={()=>go('transfer')}>Utilizar novamente dados da transferência</button><div className="detail-actions"><button onClick={()=>alert('Comprovativo adicionado aos favoritos')}><span>?</span>Favorito</button><button onClick={()=>window.open(`mailto:?subject=Comprovativo de transferência&body=Transferência ${op.reference} - ${op.amount}`,'_self')}><span>?</span>Enviar<br/>por email</button><button onClick={()=>shareReceipt(op)}><span>?</span>Guardar e<br/>Partilhar</button></div><div className="detail-pagination"><button onClick={()=>go('history')}>‹</button><span>1 de 30</span><button onClick={()=>go('history')}>›</button></div></section></main>}
-function History({items,go,open}:{items:Op[];go:(s:Screen)=>void;open:(op:Op)=>void}){const [selected,setSelected]=useState<string[]>([]);const demo=[['2026-08-13 13:12','Transf. Express.'],['2026-08-13 11:57','Transf. Express.'],['2026-08-10 12:22','Transf. Express.'],['2026-08-08 12:30','Levantamento'],['2026-08-07 20:46','Pagamento.'],['2026-08-07 19:00','Pagamento.'],['2026-08-07 18:25','Transf. Express.'],['2026-08-07 17:30','Transf. Express.'],['2026-08-07 14:58','Transf. Express.'],['2026-08-07 14:28','Compra'],['2026-08-07 13:35','Transf. Express.'],['2026-08-06 11:03','Transf. Express.'],['2026-08-05 18:25','Compra']];const rows=items.length?items.map(o=>[o.reference||o.date,o.type,o]):demo.map(([date,type],i)=>[`${date}-${i}`,type,({type:type||'Operação',recipient:type?.includes('Express')?'ALBERTO CALUME NZINGA NKONDO':type?.includes('Levantamento')?'ATM MULTICAIXA':type?.includes('Pagamento')?'UNITEL SA':type?.includes('Compra')?'SHOPRITE TALATONA':'Operação mockada',account:type?.includes('Express')?'923000000':type?.includes('Levantamento')?`ATM-${i+1001}`:type?.includes('Pagamento')?`REF-PAG-${i+2001}`:type?.includes('Compra')?`POS-${i+3001}`:`REF-${i+4001}`,amount:type?.includes('Levantamento')?'20,00 Kz':type?.includes('Pagamento')?'5,00 Kz':type?.includes('Compra')?'12,50 Kz':'0,01 Kz',description:'Operação mockada',fee:'0,00 Kz',tax:'0,00 Kz',date,reference:`16150439${i}`,status:'Concluída'} as Op)] as const);return <main className="phone-shell"><Header back={()=>go('home')}/><section className="history"><div className="activity-heading"><input type="checkbox" aria-label="Selecionar todas" checked={rows.length>0&&selected.length===rows.length} onChange={e=>setSelected(e.target.checked?rows.map(r=>r[0]):[])}/><h1>ACTIVIDADE</h1><span className="activity-count">{rows.length}</span></div><div className="activity-list">{rows.map(([key,label,op])=><div className="activity-row" key={key}><input type="checkbox" aria-label={`Selecionar ${label}`} checked={selected.includes(key)} onChange={e=>setSelected(v=>e.target.checked?[...v,key]:v.filter(x=>x!==key))}/><button onClick={()=>op&&open(op)}><span>{op?op.date:key.slice(0,16)}</span><strong>{label}</strong></button></div>)}</div></section></main>}
+function ActivityDetail({op,go}:{op:Op|null|undefined;go:(s:Screen)=>void}){if(!op)return <main className="phone-shell activity-detail"><Header back={()=>go('history')}/><section><h1>DETALHE DA TRANSFERÊNCIA</h1><p>Selecione uma atividade para consultar os detalhes.</p></section></main>;return <main className="phone-shell activity-detail"><Header back={()=>go('history')}/><section><h1>{op?.type?.includes('Express')?'DETALHE DA TRANSFERÊNCIA':'DETALHE DA ACTIVIDADE'}</h1><div className="detail-summary"><img src="/assets/bpc-card-display.png" alt="Cartão BPC"/><span>500294******1234</span></div><div className="detail-table">{[['Data-Hora',op.date],['Montante (Kz)',op.amount],['Custo (Kz)','Isento'],['Total (Kz)',op.amount],['Estado',op.status],['Transacção',op.reference],['IBAN Dest.',op.account],['Nome Dest.',op.recipient]].map(([a,b])=><p key={a}><b>{a}</b><span>{b}</span></p>)}</div><button className="reuse-link" onClick={()=>go('receipt')}>VER COMPROVATIVO</button><button className="reuse-link" onClick={()=>go('transfer')}>Utilizar novamente dados da transferência</button><div className="detail-actions"><button onClick={()=>alert('Comprovativo adicionado aos favoritos')}><span>?</span>Favorito</button><button onClick={()=>window.open(`mailto:?subject=Comprovativo de transferência&body=Transferência ${op.reference} - ${op.amount}`,'_self')}><span>?</span>Enviar<br/>por email</button><button onClick={()=>shareReceipt(op)}><span>?</span>Guardar e<br/>Partilhar</button></div><div className="detail-pagination"><button onClick={()=>go('history')}>‹</button><span>1 de 30</span><button onClick={()=>go('history')}>›</button></div></section></main>}
+function History({
+  items,
+  go,
+  open,
+}: {
+  items: Op[]
+  go: (s: Screen) => void
+  open: (op: Op) => void
+}) {
+  const [selected, setSelected] = useState<string[]>([])
+
+  const demo = [
+    ['2026-08-13 13:12', 'Transf. Express.'],
+    ['2026-08-13 11:57', 'Transf. Express.'],
+    ['2026-08-10 12:22', 'Transf. Express.'],
+    ['2026-08-08 12:30', 'Levantamento'],
+    ['2026-08-07 20:46', 'Pagamento.'],
+    ['2026-08-07 19:00', 'Pagamento.'],
+    ['2026-08-07 18:25', 'Transf. Express.'],
+    ['2026-08-07 17:30', 'Transf. Express.'],
+    ['2026-08-07 14:58', 'Transf. Express.'],
+    ['2026-08-07 14:28', 'Compra'],
+    ['2026-08-07 13:35', 'Transf. Express.'],
+    ['2026-08-06 11:03', 'Transf. Express.'],
+    ['2026-08-05 18:25', 'Compra'],
+  ] as const
+
+  type HistoryRow = {
+    key: string
+    label: string
+    op: Op
+  }
+
+  const rows: HistoryRow[] = items.length
+    ? items.map((op) => ({
+        key: op.reference || op.date,
+        label: op.type,
+        op,
+      }))
+    : demo.map(([date, type], i) => ({
+        key: `${date}-${i}`,
+        label: type,
+        op: {
+          type: type || 'Operação',
+          recipient: type.includes('Express')
+            ? 'ALBERTO CALUME NZINGA NKONDO'
+            : type.includes('Levantamento')
+              ? 'ATM MULTICAIXA'
+              : type.includes('Pagamento')
+                ? 'UNITEL SA'
+                : type.includes('Compra')
+                  ? 'SHOPRITE TALATONA'
+                  : 'Operação mockada',
+          account: type.includes('Express')
+            ? '923000000'
+            : type.includes('Levantamento')
+              ? `ATM-${i + 1001}`
+              : type.includes('Pagamento')
+                ? `REF-PAG-${i + 2001}`
+                : type.includes('Compra')
+                  ? `POS-${i + 3001}`
+                  : `REF-${i + 4001}`,
+          amount: type.includes('Levantamento')
+            ? '20,00 Kz'
+            : type.includes('Pagamento')
+              ? '5,00 Kz'
+              : type.includes('Compra')
+                ? '12,50 Kz'
+                : '0,01 Kz',
+          description: 'Operação mockada',
+          fee: '0,00 Kz',
+          tax: '0,00 Kz',
+          date,
+          reference: `16150439${i}`,
+          status: 'Concluída',
+        },
+      }))
+
+  return (
+    <main className="phone-shell">
+      <Header back={() => go('home')} />
+
+      <section className="history">
+        <div className="activity-heading">
+          <input
+            type="checkbox"
+            aria-label="Selecionar todas"
+            checked={rows.length > 0 && selected.length === rows.length}
+            onChange={(e) =>
+              setSelected(
+                e.target.checked ? rows.map((r) => r.key) : []
+              )
+            }
+          />
+
+          <h1>ACTIVIDADE</h1>
+
+          <span className="activity-count">{rows.length}</span>
+        </div>
+
+        <div className="activity-list">
+          {rows.map(({ key, label, op }) => (
+            <div className="activity-row" key={key}>
+              <input
+                type="checkbox"
+                aria-label={`Selecionar ${label}`}
+                checked={selected.includes(key)}
+                onChange={(e) =>
+                  setSelected((v) =>
+                    e.target.checked
+                      ? [...v, key]
+                      : v.filter((x) => x !== key)
+                  )
+                }
+              />
+
+              <button onClick={() => open(op)}>
+                <span>{op.date}</span>
+                <strong>{label}</strong>
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  )
+}
 function Cards({go}:{go:(s:Screen)=>void}){const [blocked,setBlocked]=useState(false);return <main className="phone-shell"><Header back={()=>go('home')}/><section className="cards-management"><h1>GESTÃO DE CARTÕES</h1><div className="managed-viewport"><div className="managed-track"><button className="managed-card"><Card/></button></div></div><div className="managed-dots"><button className="active" aria-label="Cartão Atlântico selecionado"/></div><div className="card-details"><h2>Cartão 1</h2><p><b>Número</b><span>**** **** **** 8418</span></p><p><b>Validade</b><span>06/30</span></p><button className="primary" onClick={()=>setBlocked(value=>!value)}>{blocked?'Desbloquear cartão':'Bloquear cartão'}</button><button className="secondary" onClick={()=>alert('Definições do cartão')}>Definições do cartão</button></div></section></main>}
 export default function Page(){const [screen,setScreen]=useState<Screen>('splash');const [selectedCard,setSelectedCard]=useState(0);const [drawer,setDrawer]=useState(false);const [draft,setDraft]=useState<Op|null>(null);const [operationKind,setOperationKind]=useState<Screen>('pay');const [items,setItems]=useState<Op[]>([]);const openReceipt=(transaction:Op)=>{setDraft(transaction);setScreen('activity-detail')};const [success,setSuccess]=useState(true);const [now, setNow] = useState('')
   useEffect(() => {
@@ -169,5 +459,187 @@ export default function Page(){const [screen,setScreen]=useState<Screen>('splash
       dateStyle: 'short',
       timeStyle: 'short'
     }))
-  }, []);const form=(kind:Screen)=><Form kind={kind} selectedCard={selectedCard} initial={draft||undefined} back={()=>setScreen(kind==='pay'?'channels':'home')} submit={d=>{setOperationKind(kind);setDraft({...d,recipient:d.holderName||d.recipient,holderName:d.holderName,type:kind==='transfer'?'Transferência Bancária':kind==='express'?'Express Express':kind==='topup'?'Recarga':kind==='services'?'Pagamento de Serviço':'Pagamento',fee:draft?.fee||'0,00 Kz',tax:draft?.tax||'0,00 Kz',date:draft?.date||now,reference:draft?.reference||Date.now().toString(),status:draft?.status||'Concluída',cardLast4:selectedCard===1?'8418':'8418',completedAt:new Date().toISOString()});setScreen(kind==='transfer'?'recipient':'review')}}/>;const content=screen==='splash'?<Splash next={()=>setScreen('pin')}/>:screen==='pin'?<Pin onDone={()=>setScreen('home')}/>:screen==='home'?<Home go={setScreen} menu={()=>setDrawer(true)} selectedCard={selectedCard} setSelectedCard={setSelectedCard}/>:screen==='channels'?<Channels back={()=>setScreen('home')} go={setScreen} selectedCard={selectedCard}/>:['pay','transfer','express','services','topup'].includes(screen)?form(screen):screen==='balance'?<Consultas go={setScreen} back={()=>setScreen('home')} selectedCard={selectedCard}/>:screen==='balance-result'?<BalanceResult go={setScreen} selectedCard={selectedCard}/>:screen==='recipient'&&draft?<RecipientName op={draft} back={()=>setScreen('transfer')} continueTo={name=>{setDraft({...draft,recipient:name,holderName:name});setScreen('review')}}/>:screen==='review'&&draft?<Review op={draft} back={()=>setScreen(operationKind)} confirm={()=>setScreen('pinConfirm')}/>:screen==='pinConfirm'?<Pin title="PIN para confirmar" onDone={()=>{setScreen('processing');setTimeout(()=>{const ok=true;setSuccess(ok);if(draft){const op={...draft,status:ok?'Concluída':'Falhou',reference:String(Math.floor(10000000+Math.random()*89999999))};setDraft(op);if(ok)setItems(v=>[op,...v])}setScreen('result')},1400)}}/>:screen==='processing'?<Processing next={operationKind==='balance'?'balance-result':'result'} go={setScreen}/>:screen==='result'&&draft?(['transfer','express'].includes(operationKind)?<TransferResult op={draft} go={setScreen}/>:<Result op={draft} success={success} go={setScreen}/>):screen==='balance-result'?<BalanceResult go={setScreen}/>:screen==='receipt'&&draft?<ReceiptView op={draft} back={()=>setScreen('history')}/>:screen==='history'?<History items={items} go={setScreen} open={op=>openReceipt(op)}/>:screen==='activity-detail'&&draft?<ActivityDetail op={draft} go={setScreen}/>:screen==='cards'?<Cards go={setScreen}/>:<Home go={setScreen} menu={()=>setDrawer(true)}/>;return <div className="app-frame">{content}{drawer&&<Drawer close={()=>setDrawer(false)} go={setScreen}/>}</div>}
+  }, [])
+  
+  ;const form = (kind: FormKind) => (
+  <Form
+    kind={kind}
+    selectedCard={selectedCard}
+    initial={draft || undefined}
+    back={() => setScreen(kind === 'pay' ? 'channels' : 'home')}
+    submit={d => {
+      setOperationKind(kind)
 
+      setDraft({
+        ...d,
+        recipient: d.holderName || d.recipient,
+        holderName: d.holderName,
+        type:
+          kind === 'transfer'
+            ? 'Transferência Bancária'
+            : kind === 'express'
+              ? 'Express Express'
+              : kind === 'topup'
+                ? 'Recarga'
+                : kind === 'services'
+                  ? 'Pagamento de Serviço'
+                  : 'Pagamento',
+        fee: draft?.fee || '0,00 Kz',
+        tax: draft?.tax || '0,00 Kz',
+        date: draft?.date || now,
+        reference: draft?.reference || Date.now().toString(),
+        status: draft?.status || 'Concluída',
+        cardLast4: selectedCard === 1 ? '1234' : '5678',
+        completedAt: new Date().toISOString(),
+      })
+
+      setScreen(kind === 'transfer' ? 'recipient' : 'review')
+    }}
+  />
+  )
+
+const content =
+  screen === 'splash'
+    ? <Splash next={() => setScreen('pin')} />
+
+    : screen === 'pin'
+    ? <Pin onDone={() => setScreen('home')} />
+
+    : screen === 'home'
+    ? <Home
+        go={setScreen}
+        menu={() => setDrawer(true)}
+        selectedCard={selectedCard}
+        setSelectedCard={setSelectedCard}
+      />
+
+    : screen === 'channels'
+    ? <Channels
+        back={() => setScreen('home')}
+        go={setScreen}
+        selectedCard={selectedCard}
+      />
+
+    : (['pay', 'transfer', 'express', 'services', 'topup'] as FormKind[]).includes(
+        screen as FormKind
+      )
+    ? form(screen as FormKind)
+
+    : screen === 'balance'
+    ? <Consultas
+        go={setScreen}
+        back={() => setScreen('home')}
+        selectedCard={selectedCard}
+      />
+
+    : screen === 'balance-result'
+    ? <BalanceResult
+        go={setScreen}
+        selectedCard={selectedCard}
+      />
+
+    : screen === 'recipient' && draft
+    ? <RecipientName
+        op={draft}
+        back={() => setScreen('transfer')}
+        continueTo={name => {
+          setDraft({
+            ...draft,
+            recipient: name,
+            holderName: name,
+          })
+          setScreen('review')
+        }}
+      />
+
+    : screen === 'review' && draft
+    ? <Review
+        op={draft}
+        back={() => setScreen(operationKind as Screen)}
+        confirm={() => setScreen('pinConfirm')}
+      />
+
+    : screen === 'pinConfirm'
+    ? <Pin
+        title="PIN para confirmar"
+        onDone={() => {
+          setScreen('processing')
+
+          setTimeout(() => {
+            const ok = true
+            setSuccess(ok)
+
+            if (draft) {
+              const op: Op = {
+                ...draft,
+                status: ok ? 'Concluída' : 'Falhou',
+                reference: String(
+                  Math.floor(10000000 + Math.random() * 89999999)
+                ),
+              }
+
+              setDraft(op)
+
+              if (ok) {
+                setItems(v => [op, ...v])
+              }
+            }
+
+            setScreen('result')
+          }, 1400)
+        }}
+      />
+
+    : screen === 'processing'
+    ? <Processing
+        next={operationKind === 'balance' ? 'balance-result' : 'result'}
+        go={setScreen}
+      />
+
+    : screen === 'result' && draft
+    ? (
+        ['transfer', 'express'].includes(operationKind)
+          ? <TransferResult op={draft} go={setScreen} />
+          : <Result op={draft} success={success} go={setScreen} />
+      )
+
+    : screen === 'receipt' && draft
+    ? <ReceiptView
+        op={draft}
+        back={() => setScreen('history')}
+      />
+
+    : screen === 'history'
+    ? <History
+        items={items}
+        go={setScreen}
+        open={op => openReceipt(op)}
+      />
+
+    : screen === 'activity-detail' && draft
+    ? <ActivityDetail
+        op={draft}
+        go={setScreen}
+      />
+
+    : screen === 'cards'
+    ? <Cards go={setScreen} />
+        : <Home
+        go={setScreen}
+        menu={() => setDrawer(true)}
+        selectedCard={selectedCard}
+        setSelectedCard={setSelectedCard}
+      />
+
+  return (
+    <div className="app-frame">
+      {content}
+      {drawer && (
+        <Drawer
+          close={() => setDrawer(false)}
+          go={setScreen}
+        />
+      )}
+    </div>
+  )
+}
