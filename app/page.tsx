@@ -578,19 +578,27 @@ const content =
                   Math.floor(10000000 + Math.random() * 89999999)
                 ),
               }
+              setDraft(op) 
 
-              setDraft(op)
+             if (ok) {
+  setItems(v => [op, ...v])
 
-              if (ok) {
-                setItems(v => [op, ...v])
-              }
-            }
+  fetch('/api/transactions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(op),
+  }).catch(error => {
+    console.error('Erro ao guardar transação:', error)
+  })
+  }
+}
 
-            setScreen('result')
-          }, 1400)
-        }}
-      />
-
+setScreen('result')
+}, 1400)
+}}
+/>
     : screen === 'processing'
     ? <Processing
         next={operationKind === 'balance' ? 'balance-result' : 'result'}
