@@ -655,9 +655,8 @@
     padding: 0;
     overflow-x: hidden;
     background: #fff;
-
-      }
-  }
+     }
+   
 
   .phone-shell {
     width: 100%;
@@ -1048,6 +1047,7 @@ body {
   display: none !important;
   content: none !important;
 }
+}
 
 /* Ecrãs muito pequenos */
 @media (max-width: 380px) {
@@ -1062,9 +1062,41 @@ body {
     font-size: 12px !important;
     letter-spacing: -0.2px !important;
   }
-
   .transfer-result .result-meta-right {
     min-width: 105px !important;
     font-size: 12px !important;
   }
+}
+.receipt-table {
+  position: relative !important;
+  margin-left: -20px !important;
+  border-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.receipt-table::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 114px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 2px !important;
+  background: #e00000 !important;
+}
+
+.receipt-table p {
+  grid-template-columns: 110px 8px minmax(0, 1fr) !important;
+  gap: 0 !important;
+}
+
+.receipt-table p b {
+  border-right: 0 !important;
+  padding-right: 4px !important;
+  text-align: right !important;
+  margin-right: 0 !important;
+}
+
+.receipt-table p span {
+  padding-left: 4px !important;
+  grid-column: 3 !important;
 }
