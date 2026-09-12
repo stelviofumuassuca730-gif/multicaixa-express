@@ -58,14 +58,14 @@ pdf.text(`Date: ${_dateStr}`, 12, 18);
   let y=62;
   pdf.setDrawColor(210,0,0);
   pdf.setLineWidth(1.1);
-  pdf.line(105,61,105,135);
+  pdf.line(70,61,70,135);
   rows.forEach(([label,value])=>{
     pdf.setFont('helvetica','bold');
     pdf.setFontSize(11);
-    pdf.text(label,101,y,{align:'right'});
+    pdf.text(label,66,y,{align:'right'});
     pdf.setFont('helvetica','normal');
     pdf.setFontSize(11.77);
-    pdf.text(String(value),111,y);
+    pdf.text(String(value),76,y);
     y+=8.2;
   });
   pdf.setFont('helvetica','normal');
