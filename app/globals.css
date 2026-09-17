@@ -1200,3 +1200,23 @@ body {
   margin: 72px auto 0 !important;
   border-radius: 28px !important;
 }
+/* Kz alinhado à direita no campo Valor */
+
+.iban-form > label:last-of-type input {
+  text-align: left !important;
+  padding-right: 45px !important;
+}
+
+.iban-form > label:last-of-type {
+  position: relative;
+}
+
+.iban-form > label:last-of-type::after {
+  content: "Kz";
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  color: #999;
+  font-size: 14px;
+  pointer-events: none;
+}
