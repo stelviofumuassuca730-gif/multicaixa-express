@@ -281,12 +281,11 @@ function TransferResult({
         </span>
       </div>
 
-      <h1>
-        {op.type === 'Transferência Bancária'
-          ? 'TRANSFERÊNCIA IBAN'
-          : op.type.toUpperCase()}{' '}
-        REALIZADA COM SUCESSO
-      </h1>
+     <h1>
+  {(op.type === 'Transferência Bancária' ? 'TRANSFERÊNCIA IBAN' : op.type.toUpperCase())} REALIZADA
+  <br />
+  COM SUCESSO
+</h1>
 
       <div className="result-values">
         <strong>{op.amount}</strong>
