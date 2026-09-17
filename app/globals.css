@@ -1100,70 +1100,103 @@ body {
   padding-left: 4px !important;
   grid-column: 3 !important;
 }
-/* Ajuste final da tela Transferência IBAN */
+/* ===== TELA TRANSFERÊNCIA IBAN ===== */
 
+/* Container do formulário */
+.iban-form {
+  padding-top: 10px !important;
+}
+
+/* Cartão 2 */
+.iban-form .form-card {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* Uma única linha horizontal */
 .iban-form > label:first-of-type {
-  margin-top: 2px;
-  margin-bottom: 14px;
-}
-
-.iban-form > label:first-of-type::before {
-  content: "";
-  display: block;
-  width: 100%;
-  border-top: 1px solid #ddd;
-  margin-bottom: 10px;
-}
-
-.iban-form .favorite-link {
-  margin: 0 0 20px auto;
-}
-
-.iban-form > label:last-of-type {
-  margin-top: 0;
-  margin-bottom: 12px;
-}
-
-.iban-form .favorite-picker {
-  margin: 8px 0 0 auto;
-}
-/* ===== AJUSTE FINAL - ESPACAMENTO TELA IBAN ===== */
-
-.iban-form > label:first-of-type {
+  position: relative;
   margin-top: 0 !important;
-  margin-bottom: 28px !important;
+  margin-bottom: 24px !important;
+  padding-top: 14px !important;
+  border-left: none !important;
+  padding-left: 0 !important;
 }
 
+/* Linha horizontal acima de IBAN */
 .iban-form > label:first-of-type::before {
   content: "";
   display: block;
   width: 100%;
-  border-top: 1px solid #d2d2d2;
-  margin-bottom: 14px;
+  height: 1px;
+  background: #d2d2d2;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
+/* Palavra IBAN próxima da linha */
+.iban-form > label:first-of-type {
+  color: #777 !important;
+  font-size: 16px !important;
+  line-height: 20px !important;
+  font-weight: 400 !important;
+}
+
+/* Campo AO06 */
 .iban-form > label:first-of-type input {
-  margin-top: 14px !important;
+  margin-top: 10px !important;
+  height: 42px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  background: #f1f1f1 !important;
+  padding: 0 10px !important;
+  font-size: 14px !important;
 }
 
+/* +Favoritos */
 .iban-form .favorite-link {
   margin-top: 0 !important;
-  margin-bottom: 28px !important;
+  margin-bottom: 34px !important;
+  align-self: flex-end !important;
+  font-size: 13px !important;
 }
 
+/* Label Valor */
 .iban-form > label:last-of-type {
   margin-top: 0 !important;
-  margin-bottom: 18px !important;
+  margin-bottom: 16px !important;
+  color: #777 !important;
+  font-size: 16px !important;
 }
 
+/* Campo Valor */
 .iban-form > label:last-of-type input {
-  margin-top: 14px !important;
+  margin-top: 10px !important;
+  height: 42px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  background: #f1f1f1 !important;
+  padding: 0 10px !important;
+  font-size: 14px !important;
 }
 
+/* Kz dentro do campo */
+.iban-form > label:last-of-type input::placeholder {
+  color: #999 !important;
+}
+
+/* Adicionar Favorito */
 .iban-form .favorite-picker {
   margin-top: 8px !important;
+  margin-bottom: 0 !important;
+  align-self: flex-end !important;
 }
 
+/* Botão Enviar */
 .iban-form .primary {
-  margin-top: 78px !important;
+  width: 86% !important;
+  margin: 72px auto 0 !important;
+  border-radius: 28px !important;
 }
