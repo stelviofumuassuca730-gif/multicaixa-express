@@ -1220,3 +1220,269 @@ body {
   font-size: 14px;
   pointer-events: none;
 }
+/* =========================================================
+   TELA FINAL - TRANSFERÊNCIA IBAN
+   RESPONSIVA PARA TODOS OS TELEFONES
+   ========================================================= */
+
+.transfer-result {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 0 14px 20px !important;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* HEADER MULTICAIXA EXPRESS */
+.transfer-result .result-header {
+  display: block !important;
+  width: calc(100% + 28px) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 0 10px -14px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.transfer-result .result-header-banner {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+}
+
+/* IBAN + DATA */
+.transfer-result .result-meta {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 8px 0 18px !important;
+  padding: 0 !important;
+}
+
+.transfer-result .result-iban {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  font-size: clamp(8px, 3vw, 15px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.2px !important;
+  text-align: left !important;
+}
+
+.transfer-result .result-meta-right {
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  font-size: clamp(8px, 2.8vw, 14px) !important;
+  line-height: 1.15 !important;
+  text-align: right !important;
+}
+
+/* TÍTULO - UMA ÚNICA LINHA */
+.transfer-result h1 {
+  width: 100% !important;
+  margin: 0 0 30px !important;
+  padding: 0 !important;
+  color: var(--orange) !important;
+  font-size: clamp(10px, 3vw, 18px) !important;
+  font-weight: 700 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.35px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-align: center !important;
+}
+
+/* VALORES */
+.transfer-result .result-values {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+/* MONTANTE */
+.transfer-result .result-values strong:nth-child(1) {
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  font-size: clamp(20px, 7vw, 36px) !important;
+  line-height: 1.1 !important;
+  margin-bottom: 8px !important;
+}
+
+/* IBAN E NOME */
+.transfer-result .result-values strong:nth-child(3),
+.transfer-result .result-values strong:nth-child(5) {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0 2px !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+
+  font-size: clamp(8px, 3.7vw, 24px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.3px !important;
+  font-weight: 400 !important;
+}
+
+/* LEGENDAS */
+.transfer-result .result-values small {
+  font-size: clamp(10px, 3.8vw, 18px) !important;
+  line-height: 1.1 !important;
+}
+
+/* ESPAÇAMENTO ENTRE BLOCOS */
+.transfer-result .result-values small:nth-child(2) {
+  margin-bottom: 38px !important;
+}
+
+.transfer-result .result-values small:nth-child(4) {
+  margin-bottom: 28px !important;
+}
+
+.transfer-result .result-values small:nth-child(6) {
+  margin-bottom: 28px !important;
+}
+
+/* CUSTO / TOTAL */
+.transfer-result .result-cost {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 10px 8px !important;
+  margin: 0 !important;
+  font-size: clamp(11px, 3.5vw, 18px) !important;
+}
+
+.transfer-result .result-cost b {
+  font-size: clamp(13px, 4vw, 21px) !important;
+}
+
+/* SALDO */
+.transfer-result .current-balance {
+  margin: 28px 0 !important;
+}
+
+.transfer-result .current-balance span {
+  font-size: clamp(11px, 3.8vw, 18px) !important;
+}
+
+.transfer-result .current-balance strong {
+  font-size: clamp(13px, 4vw, 20px) !important;
+}
+
+/* AÇÕES */
+.transfer-result .result-actions {
+  width: 100% !important;
+  margin: 0 !important;
+  gap: 10px !important;
+}
+
+.transfer-result .result-actions button {
+  font-size: clamp(9px, 3vw, 14px) !important;
+}
+
+/* BOTÃO CONTINUAR */
+.transfer-result > .primary {
+  width: 100% !important;
+  min-height: 48px !important;
+  margin: 18px 0 0 !important;
+  font-size: clamp(13px, 4vw, 18px) !important;
+}
+
+/* TELEFONES MUITO PEQUENOS */
+@media (max-width: 350px) {
+
+  .transfer-result {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .transfer-result .result-header {
+    width: calc(100% + 20px) !important;
+    margin-left: -10px !important;
+  }
+
+  .transfer-result .result-iban {
+    font-size: 8px !important;
+    letter-spacing: -0.35px !important;
+  }
+
+  .transfer-result .result-meta-right {
+    font-size: 8px !important;
+  }
+
+  .transfer-result h1 {
+    font-size: 9px !important;
+    letter-spacing: -0.45px !important;
+  }
+
+  .transfer-result .result-values strong:nth-child(3),
+  .transfer-result .result-values strong:nth-child(5) {
+    font-size: 8.5px !important;
+    letter-spacing: -0.4px !important;
+  }
+}
+/* ===== INFORMAÇÕES SUPERIORES DA TELA FINAL ===== */
+
+.transfer-result .result-meta {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  column-gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  align-items: start !important;
+}
+
+/* INFORMAÇÃO DA ESQUERDA */
+.transfer-result .result-meta > span:first-child {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: clip !important;
+  text-align: left !important;
+  font-size: clamp(7px, 2.5vw, 13px) !important;
+  line-height: 1.2 !important;
+}
+
+/* INFORMAÇÃO DA DIREITA */
+.transfer-result .result-meta > span:last-child {
+  min-width: max-content !important;
+  white-space: nowrap !important;
+  text-align: right !important;
+  font-size: clamp(7px, 2.5vw, 13px) !important;
+  line-height: 1.2 !important;
+}
+
+/* TELEFONES PEQUENOS */
+@media (max-width: 380px) {
+  .transfer-result .result-meta {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    column-gap: 8px !important;
+  }
+
+  .transfer-result .result-meta > span:first-child {
+    font-size: 7px !important;
+    letter-spacing: -0.25px !important;
+  }
+
+  .transfer-result .result-meta > span:last-child {
+    font-size: 7px !important;
+  }
+}
