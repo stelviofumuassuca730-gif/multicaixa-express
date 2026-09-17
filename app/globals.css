@@ -1101,12 +1101,22 @@ body {
   grid-column: 3 !important;
 }
 /* Mais espacamento no formulario IBAN */
-.iban-form label { margin: 12px 0 20px; }
-.iban-form .favorite-link { margin: 8px 0 26px auto; }
-.iban-form .favorite-picker { margin: 12px 0 26px auto; }
+.iban-form label {
+
+   margin: 12px 0 20px; 
+  }
+.iban-form .favorite-link {
+
+   margin: 8px 0 26px auto;
+   }
+.iban-form .favorite-picker { 
+  margin: 12px 0 26px auto;
+
+}
 .iban-form label {
   border-left: none !important;
   padding-left: 0 !important;
 }
 /* Aproxima Custo/Total de Saldo Actual no ecra de sucesso */
-.current-balance { margin-top: 18px; }
+.current-balance { 
+  margin-top: 18px; }
