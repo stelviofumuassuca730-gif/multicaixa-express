@@ -1,0 +1,1 @@
+<label>Valor<input value={amount} onChange={e=>{const raw=e.target.value.replace(/\D/g,'');const formatted=raw?Number(raw).toLocaleString('pt-PT'):'';setAmount(formatted)}} placeholder="Kz" inputMode="decimal"/></label>
