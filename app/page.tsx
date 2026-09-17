@@ -280,8 +280,7 @@ function TransferResult({
           500294******8418
         </span>
       </div>
-
-     <h1>
+      <h1>
   {(op.type === 'Transferência Bancária' ? 'TRANSFERÊNCIA IBAN' : op.type.toUpperCase())} REALIZADA
   <br />
   COM SUCESSO
