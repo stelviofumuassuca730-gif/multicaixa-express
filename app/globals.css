@@ -1428,10 +1428,10 @@ body {
   }
 
   .transfer-result h1 {
-    font-size: 9px !important;
+    font-size: 32px !important;
     letter-spacing: -0.45px !important;
   }
-
+.transfer-result .result-values strong:nth-child(1)
   .transfer-result .result-values strong:nth-child(3),
   .transfer-result .result-values strong:nth-child(5) {
     font-size: 8.5px !important;
@@ -1485,4 +1485,25 @@ body {
   .transfer-result .result-meta > span:last-child {
     font-size: 7px !important;
   }
+}
+/* ===== AJUSTE FINAL — TÍTULO E MONTANTE ===== */
+
+.transfer-result h1 {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.3px !important;
+  white-space: nowrap !important;
+}
+
+.transfer-result .result-values strong:nth-child(1) {
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+}
+
+.transfer-result .result-values small:nth-child(2) {
+  font-size: 16px !important;
+  font-weight: 400 !important;
 }
