@@ -1313,16 +1313,6 @@ body {
   align-items: center !important;
   gap: 0 !important;
 }
-
-/* MONTANTE */
-.transfer-result .result-values strong:nth-child(1) {
-  max-width: 100% !important;
-  white-space: nowrap !important;
-  font-size: 28px !important;
-  line-height: 1.1 !important;
-  margin-bottom: 8px !important;
-}
-
 /* IBAN E NOME */
 .transfer-result .result-values strong:nth-child(3),
 .transfer-result .result-values strong:nth-child(5) {
@@ -1426,11 +1416,6 @@ body {
   .transfer-result .result-meta-right {
     font-size: 8px !important;
   }
-
-  .transfer-result h1 {
-    font-size: 32px !important;
-    letter-spacing: -0.45px !important;
-  }
 .transfer-result .result-values strong:nth-child(1)
   .transfer-result .result-values strong:nth-child(3),
   .transfer-result .result-values strong:nth-child(5) {
@@ -1489,15 +1474,16 @@ body {
 /* ===== AJUSTE FINAL — TÍTULO E MONTANTE ===== */
 
 .transfer-result h1 {
-  font-size: 24px !important;
+  font-size: clamp(16px, 5.2vw, 24px) !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   letter-spacing: -0.3px !important;
   white-space: nowrap !important;
+  text-align: center !important;
 }
 
 .transfer-result .result-values strong:nth-child(1) {
-  font-size: 32px !important;
+  font-size: clamp(28px, 8vw, 32px) !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   white-space: nowrap !important;
