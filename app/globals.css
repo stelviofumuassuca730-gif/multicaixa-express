@@ -1474,7 +1474,7 @@ body {
 /* ===== AJUSTE FINAL — TÍTULO E MONTANTE ===== */
 
 .transfer-result h1 {
-  font-size: clamp(16px, 5.2vw, 24px) !important;
+   font-size: clamp(12px, 4.2vw, 24px) !important;
   font-weight: 700 !important;
   line-height: 1.1 !important;
   letter-spacing: -0.3px !important;
