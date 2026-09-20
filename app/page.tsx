@@ -360,13 +360,25 @@ async function buildReceiptPdf(op: Op) {
 async function shareReceipt(op: Op) {
   const blob = await buildReceiptPdf(op)
 
-  const file = new File(
-    [blob],
-    `comprovativo-${op.reference}.pdf`,
-    {
-      type: 'application/pdf'
-    }
-  )
+  const now = new Date()
+
+const date = now.toISOString()
+  .slice(0, 10)
+  .replace(/-/g, '')
+
+const time = now.toTimeString()
+  .slice(0, 8)
+  .replace(/:/g, '')
+
+const fileName = `Comprovati-vo_${date}_${time}_${op.reference}.pdf`
+
+const file = new File(
+  [blob],
+  fileName,
+  {
+    type: 'application/pdf'
+  }
+)
 
   if (
     typeof navigator !== 'undefined' &&
