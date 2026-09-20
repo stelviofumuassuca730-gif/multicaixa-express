@@ -4,114 +4,403 @@ import { useEffect, useState } from 'react'
 import { jsPDF } from 'jspdf'
 import { ArrowLeft, ArrowRight, Banknote, Check, ChevronLeft, ChevronDown, CircleHelp, CreditCard, FileText, Headphones, Info, Landmark, Mail, Menu, Phone, QrCode, Receipt, Settings, ShieldCheck, Smartphone, Star, WalletCards, X, Eye, EyeOff, Share2, Loader2 } from 'lucide-react'
 
-async function buildReceiptPdf(op:Op){
-  const pdf=new jsPDF({
-    orientation:'portrait',
-    unit:'mm',
-    format:'a4'
-  });
-  try{
-    const response=await fetch('/assets/bpc-logo-reference.png');
-    const blob=await response.blob();
-    const data=await new Promise<string>(resolve=>{
-      const reader=new FileReader();
-      reader.onload=()=>resolve(String(reader.result));
-      reader.readAsDataURL(blob);
-    });
-    pdf.addImage(data,'PNG',160,9,30,15);
-  }catch{}
-  const _d=new Date(op.completedAt||op.date);
-  const _p=(n:number)=>String(n).padStart(2,'0');
-  const _dateStr=Number.isNaN(_d.getTime())?String(op.completedAt||op.date):`${_d.getFullYear()}.${_p(_d.getDate())}.${_p(_d.getMonth()+1)} ${_p(_d.getHours())}:${_p(_d.getMinutes())}:${_p(_d.getSeconds())} WAT`;
-  pdf.setFont('helvetica','normal');
-  pdf.setFontSize(6.09);
-pdf.setTextColor(0,0,0);
-pdf.text('Digitally signed by', 12, 12);
-pdf.text('noreply@mcxexpress.co.ao', 12, 15);
-pdf.text(`Date: ${_dateStr}`, 12, 18);
-  pdf.setFontSize(14);
-  pdf.setTextColor(200,0,0);
-  pdf.text('Comprovativo Digital',105,30,{align:'center'});
-  pdf.setDrawColor(225,225,225);
-  pdf.setLineWidth(0.35);
-  pdf.line(12,38,198,38);
-  pdf.setFont('helvetica','normal');
-  pdf.setFontSize(11);
-  pdf.setTextColor(0,0,0);
-  pdf.text(
-    'Detalhe da operação realizada através do canal MULTICAIXA Express.',
-    105,
-    46,
-    {align:'center'}
-  );
-  const rows=[
-    ['Data - Hora',formatReceiptDate(op.completedAt||op.date)],
-    ['Operação',op.type],
-    ['Destinatário',op.holderName||op.recipient],
-    ['IBAN',formatIban(op.account)],
-    ['Montante',op.amount],
-    ['Comissão','-'],
-    ['Imposto','-'],
-    ['Total',op.amount],
-    ['Transacção',op.reference]
-  ];
-  let y=62;
-  pdf.setDrawColor(210,0,0);
-  pdf.setLineWidth(1.1);
-  pdf.line(70,61,70,135);
-  rows.forEach(([label,value])=>{
-    pdf.setFont('helvetica','bold');
-    pdf.setFontSize(11);
-    pdf.text(label,66,y,{align:'right'});
-    pdf.setFont('helvetica','normal');
-    pdf.setFontSize(11.77);
-    pdf.text(String(value),76,y);
-    y+=8.2;
-  });
-  pdf.setFont('helvetica','normal');
-  pdf.setFontSize(11);
-  pdf.setTextColor(0,0,0);
-  pdf.text(
-    'Cuidar do presente, assegurar o futuro.',
-    105,
-    181,
-    {align:'center'}
-  );
-  pdf.text(
-    'BPC - MCX EMV',
-    105,
-    187,
-    {align:'center'}
-  );
-  pdf.setFillColor(218,218,199);
-  pdf.rect(12,189,186,26,'F');
-  pdf.setFontSize(8);
-  pdf.setTextColor(60,60,60);
-  pdf.text(
-    'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
-    105,
-    196,
-    {align:'center'}
-  );
-  pdf.text(
-    '(+244) 222 641 840 | 923 168 840',
-    105,
-    202,
-    {align:'center'}
-  );
-  pdf.setDrawColor(190,190,175);
-  pdf.setLineWidth(0.2);
-  pdf.line(20,206,190,206);
-  pdf.setFontSize(8);
-  pdf.text(
-    'IBAN: 0010007100150020007311 | 500290******0477',
-    105,
-    212,
-    {align:'center'}
-  );
-  return pdf.output('blob');
+async function buildReceiptPdf(op: Op) {
+  const TARGET_BYTES = 24000 // exatamente 24 KB
+
+  const createPdf = async (imageQuality: number): Promise<Blob> => {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    })
+
+    try {
+      const response = await fetch('/assets/bpc-logo-reference.png')
+      const blob = await response.blob()
+
+      const data = await new Promise<string>((resolve) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result))
+        reader.readAsDataURL(blob)
+      })
+
+      // Converter o logótipo para JPEG reduz bastante o tamanho do PDF
+      const img = new Image()
+
+      const imageData = await new Promise<string>((resolve, reject) => {
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+
+          canvas.width = 180
+          canvas.height = 90
+
+          const ctx = canvas.getContext('2d')
+
+          if (!ctx) {
+            reject(new Error('Canvas indisponível'))
+            return
+          }
+
+          ctx.fillStyle = '#ffffff'
+          ctx.fillRect(0, 0, 180, 90)
+
+          ctx.drawImage(img, 0, 0, 180, 90)
+
+          resolve(
+            canvas.toDataURL('image/jpeg', imageQuality)
+          )
+        }
+
+        img.onerror = () => reject(new Error('Erro ao carregar logo'))
+        img.src = data
+      })
+
+      pdf.addImage(
+        imageData,
+        'JPEG',
+        160,
+        9,
+        30,
+        15,
+        undefined,
+        'FAST'
+      )
+    } catch {}
+
+    const _d = new Date(op.completedAt || op.date)
+    const _p = (n: number) => String(n).padStart(2, '0')
+
+    const _dateStr = Number.isNaN(_d.getTime())
+      ? String(op.completedAt || op.date)
+      : `${_d.getFullYear()}.${_p(_d.getDate())}.${_p(
+          _d.getMonth() + 1
+        )} ${_p(_d.getHours())}:${_p(
+          _d.getMinutes()
+        )}:${_p(_d.getSeconds())} WAT`
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(6.09)
+    pdf.setTextColor(0, 0, 0)
+
+    pdf.text(
+      'Digitally signed by',
+      12,
+      12
+    )
+
+    pdf.text(
+      'noreply@mcxexpress.co.ao',
+      12,
+      15
+    )
+
+    pdf.text(
+      `Date: ${_dateStr}`,
+      12,
+      18
+    )
+
+    pdf.setFontSize(14)
+    pdf.setTextColor(200, 0, 0)
+
+    pdf.text(
+      'Comprovativo Digital',
+      105,
+      30,
+      { align: 'center' }
+    )
+
+    pdf.setDrawColor(225, 225, 225)
+    pdf.setLineWidth(0.35)
+    pdf.line(12, 38, 198, 38)
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(11)
+    pdf.setTextColor(0, 0, 0)
+
+    pdf.text(
+      'Detalhe da operação realizada através do canal MULTICAIXA Express.',
+      105,
+      46,
+      { align: 'center' }
+    )
+
+    const rows = [
+      ['Data - Hora', formatReceiptDate(op.completedAt || op.date)],
+      ['Operação', op.type],
+      ['Destinatário', op.holderName || op.recipient],
+      ['IBAN', formatIban(op.account)],
+      ['Montante', op.amount],
+      ['Comissão', '-'],
+      ['Imposto', '-'],
+      ['Total', op.amount],
+      ['Transacção', op.reference]
+    ]
+
+    let y = 62
+
+    pdf.setDrawColor(210, 0, 0)
+    pdf.setLineWidth(1.1)
+    pdf.line(70, 61, 70, 135)
+
+    rows.forEach(([label, value]) => {
+      pdf.setFont('helvetica', 'bold')
+      pdf.setFontSize(11)
+
+      pdf.text(
+        label,
+        66,
+        y,
+        { align: 'right' }
+      )
+
+      pdf.setFont('helvetica', 'normal')
+      pdf.setFontSize(11.77)
+
+      pdf.text(
+        String(value),
+        76,
+        y
+      )
+
+      y += 8.2
+    })
+
+    pdf.setFont('helvetica', 'normal')
+    pdf.setFontSize(11)
+    pdf.setTextColor(0, 0, 0)
+
+    pdf.text(
+      'Cuidar do presente, assegurar o futuro.',
+      105,
+      181,
+      { align: 'center' }
+    )
+
+    pdf.text(
+      'BPC - MCX EMV',
+      105,
+      187,
+      { align: 'center' }
+    )
+
+    pdf.setFillColor(218, 218, 199)
+    pdf.rect(
+      12,
+      189,
+      186,
+      26,
+      'F'
+    )
+
+    pdf.setFontSize(8)
+    pdf.setTextColor(60, 60, 60)
+
+    pdf.text(
+      'Caso necessite de obter alguma informação, contacte por favor a nossa linha de apoio MULTICAIXA (24h):',
+      105,
+      196,
+      { align: 'center' }
+    )
+
+    pdf.text(
+      '(+244) 222 641 840 | 923 168 840',
+      105,
+      202,
+      { align: 'center' }
+    )
+
+    pdf.setDrawColor(190, 190, 175)
+    pdf.setLineWidth(0.2)
+
+    pdf.line(
+      20,
+      206,
+      190,
+      206
+    )
+
+    pdf.setFontSize(8)
+
+    pdf.text(
+      'IBAN: 0010007100150020007311 | 500290******0477',
+      105,
+      212,
+      { align: 'center' }
+    )
+
+    return pdf.output('blob') as Blob
+  }
+
+  // --------------------------------------------------
+  // 1. Procurar uma qualidade que gere menos de 24 KB
+  // --------------------------------------------------
+
+  let low = 0.05
+  let high = 0.95
+
+  let bestBlob: Blob | null = null
+
+  for (let i = 0; i < 10; i++) {
+    const quality = (low + high) / 2
+
+    const blob = await createPdf(quality)
+
+    console.log(
+      `Qualidade ${quality.toFixed(4)} → ${blob.size} bytes`
+    )
+
+    if (blob.size <= TARGET_BYTES) {
+      bestBlob = blob
+      low = quality
+    } else {
+      high = quality
+    }
+  }
+
+  // --------------------------------------------------
+  // 2. Se ainda não encontrou, usar qualidade mínima
+  // --------------------------------------------------
+
+  if (!bestBlob) {
+    bestBlob = await createPdf(0.01)
+  }
+
+  // --------------------------------------------------
+  // 3. Se ficou abaixo de 24.000 bytes,
+  //    preencher até EXATAMENTE 24.000
+  // --------------------------------------------------
+
+  if (bestBlob.size < TARGET_BYTES) {
+    const bytes = new Uint8Array(
+      await bestBlob.arrayBuffer()
+    )
+
+    const eofMarker = new TextEncoder().encode('%%EOF')
+
+    let eofPosition = -1
+
+    for (
+      let i = bytes.length - eofMarker.length;
+      i >= 0;
+      i--
+    ) {
+      let found = true
+
+      for (let j = 0; j < eofMarker.length; j++) {
+        if (bytes[i + j] !== eofMarker[j]) {
+          found = false
+          break
+        }
+      }
+
+      if (found) {
+        eofPosition = i
+        break
+      }
+    }
+
+    if (eofPosition !== -1) {
+      const needed =
+        TARGET_BYTES - bestBlob.size
+
+      const padding = new Uint8Array(needed)
+
+      // % representa comentário no formato PDF
+      padding.fill(0x25)
+
+      const finalBytes = new Uint8Array(
+        TARGET_BYTES
+      )
+
+      // Conteúdo original antes do %%EOF
+      finalBytes.set(
+        bytes.slice(0, eofPosition),
+        0
+      )
+
+      // Padding
+      finalBytes.set(
+        padding,
+        eofPosition
+      )
+
+      // %%EOF + restante do PDF
+      finalBytes.set(
+        bytes.slice(eofPosition),
+        eofPosition + padding.length
+      )
+
+      const finalBlob = new Blob(
+        [finalBytes],
+        {
+          type: 'application/pdf'
+        }
+      )
+
+      console.log(
+        `PDF FINAL: ${finalBlob.size} bytes`
+      )
+
+      console.log(
+        `PDF FINAL: ${(finalBlob.size / 1000).toFixed(3)} KB`
+      )
+
+      return finalBlob
+    }
+  }
+
+  console.log(
+    `PDF FINAL: ${bestBlob.size} bytes`
+  )
+
+  return bestBlob
 }
-async function shareReceipt(op:Op){const blob=await buildReceiptPdf(op);const file=new File([blob],`comprovativo-${op.reference}.pdf`,{type:'application/pdf'});if(typeof navigator!=='undefined'&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Comprovativo',text:`Comprovativo da operação ${op.reference}`});return}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=file.name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);alert('PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.')}
+
+async function shareReceipt(op: Op) {
+  const blob = await buildReceiptPdf(op)
+
+  const file = new File(
+    [blob],
+    `comprovativo-${op.reference}.pdf`,
+    {
+      type: 'application/pdf'
+    }
+  )
+
+  if (
+    typeof navigator !== 'undefined' &&
+    navigator.share &&
+    navigator.canShare?.({ files: [file] })
+  ) {
+    await navigator.share({
+      files: [file],
+      title: 'Comprovativo',
+      text: `Comprovativo da operação ${op.reference}`
+    })
+
+    return
+  }
+
+  const url = URL.createObjectURL(blob)
+
+  const link = document.createElement('a')
+
+  link.href = url
+  link.download = file.name
+
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+
+  setTimeout(() => {
+    URL.revokeObjectURL(url)
+  }, 1000)
+
+  alert(
+    'PDF gerado. Anexe o ficheiro manualmente ao WhatsApp.'
+  )
+}
 
 type Screen =
   | 'splash'
