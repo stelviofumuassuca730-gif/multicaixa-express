@@ -141,7 +141,7 @@ async function buildReceiptPdf(op: Op) {
 
     pdf.setDrawColor(210, 0, 0)
     pdf.setLineWidth(1.1)
-    pdf.line(70, 62, 70, 134)
+    pdf.line(70, 62, 70, 133)
 
     rows.forEach(([label, value]) => {
       pdf.setFont('helvetica', 'bold')
